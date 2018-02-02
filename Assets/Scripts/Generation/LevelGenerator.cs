@@ -175,7 +175,7 @@ public class LevelGenerator : MonoBehaviour
                         instantiateFromArray(floorTiles, i, 0, j);
                         break;
                     case TileType.Wall:
-                        instantiateFromArray(wallTiles, i, 1, j);
+                        instantiateFromArray(wallTiles, i, 0, j);
                         break;
                 }
             }
