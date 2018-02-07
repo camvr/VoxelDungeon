@@ -172,17 +172,17 @@ public class LevelGenerator : MonoBehaviour
                 switch (tiles[i][j])
                 {
                     case TileType.Floor:
-                        instantiateFromArray(floorTiles, i, 0, j);
+                        instantiateFromArray(floorTiles[(i + j) % 2], i, 0, j);
                         break;
                     case TileType.Wall:
-                        instantiateFromArray(wallTiles, i, 0, j);
+                        instantiateFromArray(wallTiles, i, 1, j, 0, ((i + j) % 2)*90, 0);
                         break;
                 }
             }
         }
     }
 
-    void instantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord)
+    void instantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
@@ -190,8 +190,32 @@ public class LevelGenerator : MonoBehaviour
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, zCoord);
 
+        Quaternion rot;
+        if (xRot != 0 || yRot != 0 || zRot != 0)
+            rot = Quaternion.Euler(xRot, yRot, zRot);
+        else
+            rot = Quaternion.identity;
+
         // Select a random prefab
-        GameObject tileInstance = Instantiate(prefabs[randomIndex], position, Quaternion.identity) as GameObject;
+        GameObject tileInstance = Instantiate(prefabs[randomIndex], position, rot) as GameObject;
+
+        // Set prefab's parent to the level holder
+        tileInstance.transform.parent = levelTiles.transform;
+    }
+
+    void instantiateFromArray(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    {
+        // The position to be instantiated at is based on the coordinates.
+        Vector3 position = new Vector3(xCoord, yCoord, zCoord);
+
+        Quaternion rot;
+        if (xRot != 0 || yRot != 0 || zRot != 0)
+            rot = Quaternion.Euler(xRot, yRot, zRot);
+        else
+            rot = Quaternion.identity;
+
+        // Select a random prefab
+        GameObject tileInstance = Instantiate(prefab, position, rot) as GameObject;
 
         // Set prefab's parent to the level holder
         tileInstance.transform.parent = levelTiles.transform;
