@@ -25,7 +25,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject levelTiles;                          // GameObject that acts as a container for the tiles in this level
 
 
-	public void Generate () {
+	public Vector3 Generate () {
         // Create the tile holder
         levelTiles = new GameObject("LevelTiles");
 
@@ -38,6 +38,17 @@ public class LevelGenerator : MonoBehaviour
         setWallPositions();
 
         instantiateTiles();
+
+        // Randomly place player in room TODO: temporary
+        int i = Random.Range(0, tiles.Length);
+        int j = Random.Range(0, tiles[i].Length);
+        while (tiles[i][j] != TileType.Floor)
+        {
+            i = Random.Range(0, tiles.Length);
+            j = Random.Range(0, tiles[i].Length);
+        }
+
+        return new Vector3(i, 0.5f, j);
     }
 	
     /**
