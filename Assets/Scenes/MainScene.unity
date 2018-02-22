@@ -346,3 +346,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   offset: {x: -2.93, y: 5.19, z: -3.29}
+  scrollSpeed: 2
+  maxZoom: 4

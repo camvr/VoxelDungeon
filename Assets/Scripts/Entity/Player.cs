@@ -3,38 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour {
-    public float moveSpeed = 5.0f;
+    public float moveSpeed = 0.5f;
+    
+    private Coroutine playerMovement;
 
-    private Vector3 pos;
+    // Update is called once per frame
+    void Update () {
+        if (playerMovement == null)
+        {
+            if (Input.GetKey(KeyCode.A)) // -x
+            {
+                transform.rotation = Quaternion.Euler(0, -90, 0);
+                playerMovement = StartCoroutine(Move(Vector2.left));
+            }
+            if (Input.GetKey(KeyCode.D)) // +x
+            {
+                transform.rotation = Quaternion.Euler(0, 90, 0);
+                playerMovement = StartCoroutine(Move(Vector2.right));
+            }
+            if (Input.GetKey(KeyCode.W)) // +z
+            {
+                transform.rotation = Quaternion.Euler(0, 0, 0);
+                playerMovement = StartCoroutine(Move(Vector2.up));
+            }
+            if (Input.GetKey(KeyCode.S)) // -z
+            {
+                transform.rotation = Quaternion.Euler(0, 180, 0);
+                playerMovement = StartCoroutine(Move(Vector2.down));
+            }
+        }
+    }
 
-	// Use this for initialization
-	void Start () {
-        pos = transform.position;
-	}
-	
-	// Update is called once per frame
-	void FixedUpdate () {
-        if (Input.GetKey(KeyCode.A) && transform.position == pos) // -x
+    private IEnumerator Move(Vector2 dir)
+    {
+        Vector3 start = transform.position;
+        Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
+        float t = 0.0f;
+
+        if (GameManager.IsLegalPos(dest))
         {
-            pos.x -= 1;
-            transform.rotation = Quaternion.Euler(0, -90, 0);
-        }
-        if (Input.GetKey(KeyCode.D) && transform.position == pos) // +x
-        {
-            pos.x += 1;
-            transform.rotation = Quaternion.Euler(0, 90, 0);
-        }
-        if (Input.GetKey(KeyCode.W) && transform.position == pos) // +z
-        {
-            pos.z += 1;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.S) && transform.position == pos) // -z
-        {
-            pos.z -= 1;
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            while (t < 1.0f)
+            {
+                transform.position = Vector3.Lerp(start, dest, t);
+                t += Time.deltaTime / moveSpeed;
+                yield return new WaitForFixedUpdate();
+            }
+
+            transform.position = dest;
         }
         
-        transform.position = Vector3.MoveTowards(transform.position, pos, Time.deltaTime * moveSpeed);
+        playerMovement = null;
     }
 }

@@ -3,7 +3,7 @@
 public class CameraFollow : MonoBehaviour {
     public Transform target;
     public Vector3 offset;
-    public float scrollSpeed = 0.2f;
+    public float scrollSpeed = 2.0f;
     public float maxZoom = 4f;
 
     private Vector3 zoomOffset;
@@ -17,9 +17,9 @@ public class CameraFollow : MonoBehaviour {
     {
         float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
 
-        zoomOffset -= new Vector3(-scroll, scroll, -scroll);
-        if (zoomOffset.y > maxZoom)
-            zoomOffset = new Vector3(-maxZoom, maxZoom, -maxZoom);
+        zoomOffset -= new Vector3(-scroll, scroll*1.5f, -scroll);
+        if (zoomOffset.y > maxZoom*1.5f)
+            zoomOffset = new Vector3(-maxZoom, maxZoom*1.5f, -maxZoom);
         else if (zoomOffset.y < 0)
             zoomOffset = new Vector3(0, 0, 0);
 

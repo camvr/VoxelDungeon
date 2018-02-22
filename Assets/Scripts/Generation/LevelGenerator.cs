@@ -3,13 +3,6 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
-    public enum TileType
-    {
-        Wall,
-        Floor,
-        Empty,
-    }
-
     public int columns = 100;                               // The total number of columns in the level space
     public int rows = 100;                                  // The total number of rows in the level space
     public RandInt numRooms = new RandInt(15, 20);          // The range of how many rooms there can be
@@ -19,15 +12,15 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] floorTiles;                         // An array of floor tile prefabs
     public GameObject[] wallTiles;                          // An array of wall tile prefabs
 
-    private TileType[][] tiles;                             // An array of tiles representing the level
+    private Map.TileType[][] tiles;                             // An array of tiles representing the level
     private Room[] rooms;                                   // An array of rooms for this level that are generated
     private Corridor[] corridors;                           // An array of corridors for this level that are generated
-    private GameObject levelTiles;                          // GameObject that acts as a container for the tiles in this level
+    private GameObject dungeonTiles;                        // GameObject that acts as a container for the tiles in this level
 
 
-	public Vector3 Generate () {
+	public Map.TileType[][] Generate () {
         // Create the tile holder
-        levelTiles = new GameObject("LevelTiles");
+        dungeonTiles = new GameObject("DungeonTiles");
 
         setupTilesArray();
 
@@ -39,16 +32,7 @@ public class LevelGenerator : MonoBehaviour
 
         instantiateTiles();
 
-        // Randomly place player in room TODO: temporary
-        int i = Random.Range(0, tiles.Length);
-        int j = Random.Range(0, tiles[i].Length);
-        while (tiles[i][j] != TileType.Floor)
-        {
-            i = Random.Range(0, tiles.Length);
-            j = Random.Range(0, tiles[i].Length);
-        }
-
-        return new Vector3(i, 0.5f, j);
+        return tiles;
     }
 	
     /**
@@ -56,14 +40,14 @@ public class LevelGenerator : MonoBehaviour
      */
 	void setupTilesArray()
     {
-        tiles = new TileType[columns + 2][];
+        tiles = new Map.TileType[columns + 2][];
 
         for (int i = 0; i < tiles.Length; i++)
         {
-            tiles[i] = new TileType[rows + 2];
+            tiles[i] = new Map.TileType[rows + 2];
 
             for (int j = 0; j < tiles[i].Length; j++)
-                tiles[i][j] = TileType.Empty;
+                tiles[i][j] = Map.TileType.Empty;
         }
     }
 
@@ -112,7 +96,7 @@ public class LevelGenerator : MonoBehaviour
                     int zCoord = currRoom.zPos + k;
 
                     // Set tile at this position to a floor tile
-                    tiles[xCoord + 1][zCoord + 1] = TileType.Floor;
+                    tiles[xCoord + 1][zCoord + 1] = Map.TileType.Floor;
                 }
             }
         }
@@ -147,7 +131,7 @@ public class LevelGenerator : MonoBehaviour
                 }
 
                 // Set tile at this position to a floor tile
-                tiles[xCoord + 1][zCoord + 1] = TileType.Floor;
+                tiles[xCoord + 1][zCoord + 1] = Map.TileType.Floor;
             }
         }
     }
@@ -158,14 +142,14 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int j = 0; j < tiles[i].Length; j++)
             {
-                if (tiles[i][j] == TileType.Empty)
+                if (tiles[i][j] == Map.TileType.Empty)
                 {
-                    if ((i > 0 && tiles[i - 1][j] == TileType.Floor) ||
-                        (i < tiles.Length - 1 && tiles[i + 1][j] == TileType.Floor) ||
-                        (j > 0 && tiles[i][j - 1] == TileType.Floor) ||
-                        (j < tiles[i].Length - 1 && tiles[i][j + 1] == TileType.Floor))
+                    if ((i > 0 && tiles[i - 1][j] == Map.TileType.Floor) ||
+                        (i < tiles.Length - 1 && tiles[i + 1][j] == Map.TileType.Floor) ||
+                        (j > 0 && tiles[i][j - 1] == Map.TileType.Floor) ||
+                        (j < tiles[i].Length - 1 && tiles[i][j + 1] == Map.TileType.Floor))
                     {
-                        tiles[i][j] = TileType.Wall;
+                        tiles[i][j] = Map.TileType.Wall;
                     }
                 }
             }
@@ -182,10 +166,10 @@ public class LevelGenerator : MonoBehaviour
                 // Instantiate a tile at this position
                 switch (tiles[i][j])
                 {
-                    case TileType.Floor:
+                    case Map.TileType.Floor:
                         instantiateFromArray(floorTiles[(i + j) % 2], i, 0, j);
                         break;
-                    case TileType.Wall:
+                    case Map.TileType.Wall:
                         instantiateFromArray(wallTiles, i, 1, j, 0, ((i + j) % 2)*90, 0);
                         break;
                 }
@@ -211,7 +195,7 @@ public class LevelGenerator : MonoBehaviour
         GameObject tileInstance = Instantiate(prefabs[randomIndex], position, rot) as GameObject;
 
         // Set prefab's parent to the level holder
-        tileInstance.transform.parent = levelTiles.transform;
+        tileInstance.transform.parent = dungeonTiles.transform;
     }
 
     void instantiateFromArray(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
@@ -229,6 +213,6 @@ public class LevelGenerator : MonoBehaviour
         GameObject tileInstance = Instantiate(prefab, position, rot) as GameObject;
 
         // Set prefab's parent to the level holder
-        tileInstance.transform.parent = levelTiles.transform;
+        tileInstance.transform.parent = dungeonTiles.transform;
     }
 }
