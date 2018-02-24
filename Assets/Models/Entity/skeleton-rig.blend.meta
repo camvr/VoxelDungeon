@@ -1,19 +1,51 @@
 fileFormatVersion: 2
-guid: 26a15418bbe4b1b49bdaca618250b836
-timeCreated: 1517971195
+guid: 1bc554937733d1b489f010a6496679dc
+timeCreated: 1519497542
 licenseType: Free
 ModelImporter:
   serializedVersion: 22
   fileIDToRecycleName:
-    100000: skeleton
-    100002: //RootNode
-    400000: skeleton
-    400002: //RootNode
-    2100000: palette
-    2300000: skeleton
-    3300000: skeleton
-    4300000: skeleton
-  externalObjects: {}
+    100000: Armature
+    100002: Chest
+    100004: Head
+    100006: LowerArm_L
+    100008: LowerArm_R
+    100010: LowerLeg_L
+    100012: LowerLeg_R
+    100014: //RootNode
+    100016: skelington
+    100018: Stomach
+    100020: UpperArm_L
+    100022: UpperArm_R
+    100024: UpperLeg_L
+    100026: UpperLeg_R
+    400000: Armature
+    400002: Chest
+    400004: Head
+    400006: LowerArm_L
+    400008: LowerArm_R
+    400010: LowerLeg_L
+    400012: LowerLeg_R
+    400014: //RootNode
+    400016: skelington
+    400018: Stomach
+    400020: UpperArm_L
+    400022: UpperArm_R
+    400024: UpperLeg_L
+    400026: UpperLeg_R
+    2100000: palette__skelington_png
+    4300000: skelington
+    7400000: Default Take
+    7400002: Idle
+    7400004: WalkCycle
+    9500000: //RootNode
+    13700000: skelington
+  externalObjects:
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: palette__skelington_png
+    second: {fileID: 2100000, guid: 2573c9850cb5d274fbef73f89e8a9722, type: 2}
   materials:
     importMaterials: 1
     materialName: 0
@@ -87,7 +119,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 0
+  animationType: 2
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

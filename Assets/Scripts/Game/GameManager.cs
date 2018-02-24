@@ -5,6 +5,8 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance = null;
+
+    [HideInInspector]
     public LevelGenerator levelGenerator;
     
     /* Prefabs */
