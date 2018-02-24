@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4fb54f75398dc614ea27d9c829daa081
+timeCreated: 1519506738
+licenseType: Free
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontName: PxPlus IBM CGAthin-2y
+  fontNames:
+  - PxPlus IBM CGAthin-2y
+  fallbackFontReferences: []
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
