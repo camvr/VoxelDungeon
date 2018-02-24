@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levelGenerator: {fileID: 0}
-  player: {fileID: 1419209491723306, guid: b293108102fa4544abd1ba329866bc61, type: 2}
+  player: {fileID: 1766323981708000, guid: 8a028e5b5ba37d24c8a92efbefecbc79, type: 2}
 --- !u!4 &1493647582
 Transform:
   m_ObjectHideFlags: 0

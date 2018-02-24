@@ -4,8 +4,14 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
     public float moveSpeed = 0.5f;
-    
+    public float animFade  = 0.1f;
+
+    private Animator anim;
     private Coroutine playerMovement;
+
+    void Start () {
+        anim = GetComponent<Animator>();
+    }
 
     // Update is called once per frame
     void Update () {
@@ -42,6 +48,11 @@ public class Player : MonoBehaviour {
 
         if (GameManager.IsLegalPos(dest))
         {
+            // start walk animation
+            anim.CrossFade("WalkState", animFade);
+            anim.SetBool("isWalking", true);
+            anim.SetBool("isIdle", false);
+
             while (t < 1.0f)
             {
                 transform.position = Vector3.Lerp(start, dest, t);
@@ -50,6 +61,11 @@ public class Player : MonoBehaviour {
             }
 
             transform.position = dest;
+
+            // return to idle animation
+            anim.CrossFade("IdleState", animFade);
+            anim.SetBool("isWalking", false);
+            anim.SetBool("isIdle", true);
         }
         
         playerMovement = null;
