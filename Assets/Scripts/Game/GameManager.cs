@@ -2,34 +2,42 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum GameState
+{
+    playerTurn,
+    worldTurn,
+    gameOver,
+}
+
 public class GameManager : MonoBehaviour
 {
+    #region Singleton
     public static GameManager instance = null;
+    #endregion
+
+    [HideInInspector]
+    public static GameState gameState = GameState.playerTurn;
 
     [HideInInspector]
     public LevelGenerator levelGenerator;
-    
+
     /* Prefabs */
-    public GameObject player;
+    public GameObject enemyPrefab;
 
     /* Global Object Containers */
-    private GameObject entityTiles;
+    private GameObject enemyObjects;
 
-    /* Global State Variables */
-    private static Map.TileType[][] board;
-
+    private List<EnemyController> enemies = new List<EnemyController>();
 
     void Awake () {
-        /* Instantiate game manager */
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        
         DontDestroyOnLoad(gameObject);
 
         /* Instantiate global containers */
-        entityTiles = new GameObject("EntityTiles");
+        enemyObjects = new GameObject("EnemyObjects");
 
         /* Instantiate generation scripts */
         levelGenerator = GetComponent<LevelGenerator>();
@@ -42,41 +50,43 @@ public class GameManager : MonoBehaviour
     private void InitGame()
     {
         // Generate level
-        board = levelGenerator.Generate();
+        Vector3 playerStartPos = levelGenerator.Generate();
 
         /* Place entities */
 
         // Place the player
-        GameObject playerInstance = Instantiate(player, GetLegalPosition(), Quaternion.identity) as GameObject;
-        playerInstance.transform.parent = entityTiles.transform;
-        Camera.main.gameObject.GetComponent<CameraFollow>().target = playerInstance.transform;
+        PlayerController.instance.transform.position = playerStartPos;
 
-    }
-
-
-    public static Vector3 GetLegalPosition()
-    {
-        int x = Random.Range(0, board.Length);
-        int z = Random.Range(0, board[x].Length);
-
-        while (board[x][z] != Map.TileType.Floor)
+        // Place enemies
+        // TODO: temporary
+        for (int i = 0; i < 10; i++)
         {
-            x = Random.Range(0, board.Length);
-            z = Random.Range(0, board[x].Length);
+            GameObject enemyInstance = Instantiate(enemyPrefab, Map.GetLegalPosition(), Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
+            enemyInstance.transform.parent = enemyObjects.transform;
+            enemies.Add(enemyInstance.GetComponent<EnemyController>());
         }
-
-        return new Vector3(x, 0.5f, z);
-    }
-
-
-    public static bool IsLegalPos(Vector3 pos)
-    {
-        return board[(int)pos.x][(int)pos.z] == Map.TileType.Floor;
     }
 
 
     // Update is called once per frame
-    void Update () {
-		
+    void Update ()
+    {
+		/* Handle Game States */
+        switch (gameState)
+        {
+            case GameState.worldTurn:
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    enemies[i].chooseAction();
+                }
+                
+                gameState = GameState.playerTurn;
+                break;
+            case GameState.gameOver:
+                // game over screen
+                break;
+            default:
+                break;
+        }
 	}
 }

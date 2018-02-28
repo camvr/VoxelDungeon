@@ -22,7 +22,7 @@ AnimatorController:
     m_Controller: {fileID: 0}
   - m_Name: walkSpeedModifier
     m_Type: 1
-    m_DefaultFloat: 2
+    m_DefaultFloat: 3
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 0}
@@ -199,7 +199,7 @@ AnimatorState:
   m_SpeedParameter: walkSpeedModifier
   m_MirrorParameter: 
   m_CycleOffsetParameter: 
-  m_TimeParameter: 
+  m_TimeParameter: walkSpeedModifier
 --- !u!1102 &1102832602631114904
 AnimatorState:
   serializedVersion: 5

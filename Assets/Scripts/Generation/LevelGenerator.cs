@@ -18,7 +18,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject dungeonTiles;                        // GameObject that acts as a container for the tiles in this level
 
 
-	public Map.TileType[][] Generate () {
+	public Vector3 Generate () {
         // Create the tile holder
         dungeonTiles = new GameObject("DungeonTiles");
 
@@ -32,7 +32,9 @@ public class LevelGenerator : MonoBehaviour
 
         instantiateTiles();
 
-        return tiles;
+        Map.setBoard(tiles);
+
+        return Map.GetLegalPosition(); // TODO: return the entry point instead
     }
 	
     /**
