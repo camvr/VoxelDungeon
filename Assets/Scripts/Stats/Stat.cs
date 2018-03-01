@@ -6,13 +6,15 @@ using UnityEngine;
 public class Stat {
 
     [SerializeField]
-    private int baseValue;
+    private int minValue;
+    [SerializeField]
+    private int maxValue;
 
     private List<int> modifiers = new List<int>();
 
     public int GetValue()
     {
-        int finalValue = baseValue;
+        int finalValue = Random.Range(minValue, maxValue);
         modifiers.ForEach(x => finalValue += x);
         return finalValue;
     }

@@ -6,7 +6,7 @@ public class EnemyMovement : MonoBehaviour {
     public float animFade = 0.1f;
 
     private Animator anim;
-    //private Coroutine enemyMovement;
+    
 
     private void Start()
     {
@@ -16,12 +16,14 @@ public class EnemyMovement : MonoBehaviour {
     public bool AttemptMove(Vector2 dir)
     {
         Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
-        if (Map.IsLegalPos(dest))
+
+        RaycastHit ray;
+        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
         {
             RotateToDir(dir);
-            
+
             StartCoroutine(Move(dest));
-            
+
             return true;
         }
 

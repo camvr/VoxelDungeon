@@ -16,13 +16,16 @@ public class CameraController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
+        if (GameManager.gameState != GameState.gameOver)
+        {
+            float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
 
-        zoomOffset -= new Vector3(-scroll, scroll*1.5f, -scroll);
-        if (zoomOffset.y > maxZoom*1.5f)
-            zoomOffset = new Vector3(-maxZoom, maxZoom*1.5f, -maxZoom);
-        else if (zoomOffset.y < 0)
-            zoomOffset = new Vector3(0, 0, 0);
+            zoomOffset -= new Vector3(-scroll, scroll * 1.5f, -scroll);
+            if (zoomOffset.y > maxZoom * 1.5f)
+                zoomOffset = new Vector3(-maxZoom, maxZoom * 1.5f, -maxZoom);
+            else if (zoomOffset.y < 0)
+                zoomOffset = new Vector3(0, 0, 0);
+        }
 
         transform.position = target.position + offset + zoomOffset;
         transform.LookAt(target);

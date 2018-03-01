@@ -5,6 +5,8 @@ using UnityEngine;
 [RequireComponent(typeof(EntityStats))]
 public class EntityCombat : MonoBehaviour {
 
+    public event System.Action OnAttack;
+
     EntityStats stats;
 
     private void Start()
@@ -15,5 +17,8 @@ public class EntityCombat : MonoBehaviour {
     public void Attack(EntityStats target)
     {
         target.Damage(stats.damage.GetValue()); // TODO: may need tweaking
+
+        if (OnAttack != null)
+            OnAttack();
     }
 }

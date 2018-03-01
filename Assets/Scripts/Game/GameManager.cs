@@ -18,8 +18,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector]
     public static GameState gameState = GameState.playerTurn;
 
-    [HideInInspector]
-    public LevelGenerator levelGenerator;
+    private LevelGenerator levelGenerator;
 
     /* Prefabs */
     public GameObject enemyPrefab;
@@ -77,10 +76,12 @@ public class GameManager : MonoBehaviour
             case GameState.worldTurn:
                 for (int i = 0; i < enemies.Count; i++)
                 {
-                    enemies[i].chooseAction();
+                    enemies[i].ChooseAction();
                 }
-                
-                gameState = GameState.playerTurn;
+
+                if (gameState != GameState.gameOver) // player is still alive
+                    gameState = GameState.playerTurn; // TODO: make sure this changes after skeleton has taken move
+
                 break;
             case GameState.gameOver:
                 // game over screen

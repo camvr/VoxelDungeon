@@ -2,28 +2,40 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(EntityStats))]
+[RequireComponent(typeof(EntityCombat))]
 public class EnemyController : Interactable {
     public int viewRadius = 5;
 
     private int maxMovementRetries = 8;
+
     private EnemyMovement movement;
     private EnemyStats stats;
+    private EntityCombat combat;
+
     private PlayerController playerInstance;
 
     private void Start()
     {
         movement = GetComponent<EnemyMovement>();
         stats = GetComponent<EnemyStats>();
+        combat = GetComponent<EntityCombat>();
+
         playerInstance = PlayerController.instance;
     }
 
     public override void Interact()
     {
         base.Interact();
-        EntityCombat playerStats = playerInstance.player.GetComponent<EntityCombat>();
+        EntityCombat playerCombat = playerInstance.player.GetComponent<EntityCombat>();
+
+        if (playerCombat != null)
+        {
+            playerCombat.Attack(stats);
+        }
     }
 
-    public void chooseAction()
+    public void ChooseAction()
     {
         /* Action priority:
          * 1. Attack player if they're in reach
@@ -40,6 +52,10 @@ public class EnemyController : Interactable {
             // face player
             movement.RotateToDir(attackDir);
             // attack player
+            EntityStats playerStats = playerInstance.player.GetComponent<EntityStats>();
+            if (playerStats != null)
+                combat.Attack(playerStats);
+
             Debug.Log(transform.name + " attacks player.");
         }
         else if (PlayerInView())
@@ -103,12 +119,9 @@ public class EnemyController : Interactable {
         {
             // Player in view radius
             RaycastHit hit; // TODO: Check if a wall is blocking the way
-            
-            if (!Physics.Raycast(enemyPos, playerPos, out hit, viewRadius) || hit.transform == PlayerController.instance.transform)
-            {
-                // Player is visible
-                return true;
-            }
+            Physics.Raycast(enemyPos, playerPos - enemyPos, out hit, viewRadius);
+            Debug.Log("Skeleton sees: " + hit.transform.name);
+            return hit.transform == PlayerController.instance.player.transform;
 
             // TODO: Keep a memory of last known position to move to if player is suddenly not visible
         }

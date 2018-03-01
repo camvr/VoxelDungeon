@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
 
@@ -20,8 +21,23 @@ public class PlayerController : MonoBehaviour {
     }
     #endregion
 
+    private void Update()
+    {
+        if (EventSystem.current.IsPointerOverGameObject())
+            return;
+
+
+    }
+
     public bool IsInPlayerView(Vector3 target)
     {
         return (transform.position - target).sqrMagnitude < viewRadius * viewRadius;
+    }
+
+    public void KillPlayer()
+    {
+        // end the game
+        Debug.Log("game over");
+        GameManager.gameState = GameState.gameOver;
     }
 }

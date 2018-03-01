@@ -22,56 +22,87 @@ public class PlayerMovement : MonoBehaviour {
         {
             if (Input.GetKey(KeyCode.A)) // -x
             {
-                transform.rotation = Quaternion.Euler(0, -90, 0);
-                playerMovement = StartCoroutine(Move(Vector2.left));
+                AttemptMove(Vector2.left);
             }
             if (Input.GetKey(KeyCode.D)) // +x
             {
-                transform.rotation = Quaternion.Euler(0, 90, 0);
-                playerMovement = StartCoroutine(Move(Vector2.right));
+                AttemptMove(Vector2.right);
             }
             if (Input.GetKey(KeyCode.W)) // +z
             {
-                transform.rotation = Quaternion.Euler(0, 0, 0);
-                playerMovement = StartCoroutine(Move(Vector2.up));
+                AttemptMove(Vector2.up);
             }
             if (Input.GetKey(KeyCode.S)) // -z
             {
-                transform.rotation = Quaternion.Euler(0, 180, 0);
-                playerMovement = StartCoroutine(Move(Vector2.down));
+                AttemptMove(Vector2.down);
             }
         }
     }
 
-    private IEnumerator Move(Vector2 dir)
+    public bool AttemptMove(Vector2 dir)
+    {
+        Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
+        RotateToDir(dir);
+
+        RaycastHit ray;
+        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
+        {
+            playerMovement = StartCoroutine(Move(dest));
+            return true;
+        }
+
+        Debug.Log("Hit object: " + ray.transform.name);
+        GameManager.gameState = GameState.worldTurn;
+
+        return false;
+    }
+
+    private IEnumerator Move(Vector3 dest)
     {
         Vector3 start = transform.position;
-        Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
         float t = 0.0f;
+       
+        // start walk animation
+        anim.CrossFade("WalkState", animFade);
+        anim.SetBool("isWalking", true);
+        anim.SetBool("isIdle", false);
 
-        if (Map.IsLegalPos(dest))
+        while (t < 1.0f)
         {
-            // start walk animation
-            anim.CrossFade("WalkState", animFade);
-            anim.SetBool("isWalking", true);
-            anim.SetBool("isIdle", false);
-
-            while (t < 1.0f)
-            {
-                transform.position = Vector3.Lerp(start, dest, t);
-                t += Time.deltaTime / moveSpeed;
-                yield return new WaitForFixedUpdate();
-            }
-
-            transform.position = dest;
-
-            // return to idle animation
-            anim.CrossFade("IdleState", animFade);
-            anim.SetBool("isWalking", false);
-            anim.SetBool("isIdle", true);
+            transform.position = Vector3.Lerp(start, dest, t);
+            t += Time.deltaTime / moveSpeed;
+            yield return new WaitForFixedUpdate();
         }
-        
+
+        transform.position = dest;
+
+        // return to idle animation
+        anim.CrossFade("IdleState", animFade);
+        anim.SetBool("isWalking", false);
+        anim.SetBool("isIdle", true);
+
         playerMovement = null;
+
         GameManager.gameState = GameState.worldTurn;
+    }
+
+    public void RotateToDir(Vector2 dir)
+    {
+        if (dir == Vector2.left) // -x
+        {
+            transform.rotation = Quaternion.Euler(0, -90, 0);
+        }
+        else if (dir == Vector2.right) // +x
+        {
+            transform.rotation = Quaternion.Euler(0, 90, 0);
+        }
+        else if (dir == Vector2.up) // +z
+        {
+            transform.rotation = Quaternion.Euler(0, 0, 0);
+        }
+        else if (dir == Vector2.down) // -z
+        {
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        }
     }
 }

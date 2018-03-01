@@ -25,7 +25,7 @@ public class PlayerStats : EntityStats {
     public override void Die()
     {
         base.Die();
-        // game over!
+        PlayerController.instance.KillPlayer(); // game over!
     }
 
 }
