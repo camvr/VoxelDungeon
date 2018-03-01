@@ -6,31 +6,33 @@ public class EnemyMovement : MonoBehaviour {
     public float animFade = 0.1f;
 
     private Animator anim;
-    
 
     private void Start()
     {
         anim = GetComponent<Animator>();
+
+        anim.SetFloat("walkSpeedModifier", 1.8f / moveSpeed);
     }
 
     public bool AttemptMove(Vector2 dir)
     {
         Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
 
-        RaycastHit ray;
-        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f)) // TODO: improve quality of the results of this
+        RaycastHit hit;
+        if (!Physics.Linecast(transform.position, dest, out hit)) // TODO: improve quality of the results of this
         {
+
             RotateToDir(dir);
 
-            StartCoroutine(Move(dest));
+            StartCoroutine(SmoothMove(dest));
 
             return true;
         }
-
+        
         return false;
     }
 
-    private IEnumerator Move(Vector3 dest)
+    private IEnumerator SmoothMove(Vector3 dest)
     {
         Vector3 start = transform.position;
         float t = 0.0f;

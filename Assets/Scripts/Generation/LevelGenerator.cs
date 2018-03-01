@@ -12,48 +12,45 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] floorTiles;                         // An array of floor tile prefabs
     public GameObject[] wallTiles;                          // An array of wall tile prefabs
 
-    private Map.TileType[][] tiles;                             // An array of tiles representing the level
+    private TileType[][] tiles;                             // An array of tiles representing the level
     private Room[] rooms;                                   // An array of rooms for this level that are generated
     private Corridor[] corridors;                           // An array of corridors for this level that are generated
     private GameObject dungeonTiles;                        // GameObject that acts as a container for the tiles in this level
 
 
-	public Vector3 Generate () {
-        // Create the tile holder
+	public TileType[][] Generate () {
         dungeonTiles = new GameObject("DungeonTiles");
 
-        setupTilesArray();
+        SetupTilesArray();
 
-        createRoomsAndCorridors();
+        CreateRoomsAndCorridors();
 
-        setTilesValuesForRooms();
-        setTilesValuesForCorridors();
-        setWallPositions();
+        SetTilesValuesForRooms();
+        SetTilesValuesForCorridors();
+        SetWallPositions();
 
-        instantiateTiles();
+        InstantiateTiles();
 
-        Map.setBoard(tiles);
-
-        return Map.GetLegalPosition(); // TODO: return the entry point instead
+        return tiles;
     }
 	
     /**
      * Initializes the tiles array for the generation algorithm to store tile types in.
      */
-	void setupTilesArray()
+	void SetupTilesArray()
     {
-        tiles = new Map.TileType[columns + 2][];
+        tiles = new TileType[columns + 2][];
 
         for (int i = 0; i < tiles.Length; i++)
         {
-            tiles[i] = new Map.TileType[rows + 2];
+            tiles[i] = new TileType[rows + 2];
 
             for (int j = 0; j < tiles[i].Length; j++)
-                tiles[i][j] = Map.TileType.Empty;
+                tiles[i][j] = TileType.Empty;
         }
     }
 
-    void createRoomsAndCorridors()
+    void CreateRoomsAndCorridors()
     {
         // Initialize the number of rooms and corresponding corridors
         rooms = new Room[numRooms.Random];
@@ -82,7 +79,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    void setTilesValuesForRooms()
+    void SetTilesValuesForRooms()
     {
         for (int i = 0; i < rooms.Length; i++)
         {
@@ -98,13 +95,13 @@ public class LevelGenerator : MonoBehaviour
                     int zCoord = currRoom.zPos + k;
 
                     // Set tile at this position to a floor tile
-                    tiles[xCoord + 1][zCoord + 1] = Map.TileType.Floor;
+                    tiles[xCoord + 1][zCoord + 1] = TileType.Floor;
                 }
             }
         }
     }
 
-    void setTilesValuesForCorridors()
+    void SetTilesValuesForCorridors()
     {
         for (int i = 0; i < corridors.Length; i++)
         {
@@ -133,32 +130,32 @@ public class LevelGenerator : MonoBehaviour
                 }
 
                 // Set tile at this position to a floor tile
-                tiles[xCoord + 1][zCoord + 1] = Map.TileType.Floor;
+                tiles[xCoord + 1][zCoord + 1] = TileType.Floor;
             }
         }
     }
 
-    void setWallPositions()
+    void SetWallPositions()
     {
         for (int i = 0; i < tiles.Length; i++)
         {
             for (int j = 0; j < tiles[i].Length; j++)
             {
-                if (tiles[i][j] == Map.TileType.Empty)
+                if (tiles[i][j] == TileType.Empty)
                 {
-                    if ((i > 0 && tiles[i - 1][j] == Map.TileType.Floor) ||
-                        (i < tiles.Length - 1 && tiles[i + 1][j] == Map.TileType.Floor) ||
-                        (j > 0 && tiles[i][j - 1] == Map.TileType.Floor) ||
-                        (j < tiles[i].Length - 1 && tiles[i][j + 1] == Map.TileType.Floor))
+                    if ((i > 0 && tiles[i - 1][j] == TileType.Floor) ||
+                        (i < tiles.Length - 1 && tiles[i + 1][j] == TileType.Floor) ||
+                        (j > 0 && tiles[i][j - 1] == TileType.Floor) ||
+                        (j < tiles[i].Length - 1 && tiles[i][j + 1] == TileType.Floor))
                     {
-                        tiles[i][j] = Map.TileType.Wall;
+                        tiles[i][j] = TileType.Wall;
                     }
                 }
             }
         }
     }
 
-    void instantiateTiles()
+    void InstantiateTiles()
     {
         // Loop through all tiles in the tiles array
         for (int i = 0; i < tiles.Length; i++)
@@ -168,18 +165,18 @@ public class LevelGenerator : MonoBehaviour
                 // Instantiate a tile at this position
                 switch (tiles[i][j])
                 {
-                    case Map.TileType.Floor:
-                        instantiateFromArray(floorTiles[(i + j) % 2], i, 0, j);
+                    case TileType.Floor:
+                        InstantiateFromArray(floorTiles[(i + j) % 2], i, 0, j);
                         break;
-                    case Map.TileType.Wall:
-                        instantiateFromArray(wallTiles, i, 1, j, 0, ((i + j) % 2)*90, 0);
+                    case TileType.Wall:
+                        InstantiateFromArray(wallTiles, i, 1, j, 0, ((i + j) % 2)*90, 0);
                         break;
                 }
             }
         }
     }
 
-    void instantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
@@ -200,7 +197,7 @@ public class LevelGenerator : MonoBehaviour
         tileInstance.transform.parent = dungeonTiles.transform;
     }
 
-    void instantiateFromArray(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    void InstantiateFromArray(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, zCoord);

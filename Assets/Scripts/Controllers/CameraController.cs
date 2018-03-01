@@ -16,7 +16,7 @@ public class CameraController : MonoBehaviour {
 
     void FixedUpdate()
     {
-        if (GameManager.gameState != GameState.gameOver)
+        if (!GameManager.instance.gameOver)
         {
             float scroll = Input.GetAxis("Mouse ScrollWheel") * scrollSpeed;
 

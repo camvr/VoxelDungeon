@@ -2936,6 +2936,7 @@ GameObject:
   - component: {fileID: 1493647582}
   - component: {fileID: 1493647581}
   - component: {fileID: 1493647583}
+  - component: {fileID: 1493647586}
   - component: {fileID: 1493647585}
   - component: {fileID: 1493647584}
   m_Layer: 0
@@ -2956,8 +2957,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f9043b9d3153a4892fb97d9a16c0a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 1222471938327394, guid: e799858fbb80ee2489c6aa6d9c73d840,
-    type: 2}
+  boardManager: {fileID: 0}
+  playersTurn: 1
+  gameOver: 0
+  turnDelay: 0.1
 --- !u!4 &1493647582
 Transform:
   m_ObjectHideFlags: 0
@@ -3025,6 +3028,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSize: 12
   items: []
+--- !u!114 &1493647586
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1493647580}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1144fe3a0d84eb547bc1d6e749ed96f5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  instance: {fileID: 0}
+  enemyPrefab: {fileID: 1222471938327394, guid: e799858fbb80ee2489c6aa6d9c73d840,
+    type: 2}
 --- !u!1 &1529870078
 GameObject:
   m_ObjectHideFlags: 0

@@ -55,24 +55,21 @@ public class EnemyController : Interactable {
             EntityStats playerStats = playerInstance.player.GetComponent<EntityStats>();
             if (playerStats != null)
                 combat.Attack(playerStats);
-
-            Debug.Log(transform.name + " attacks player.");
         }
         else if (PlayerInView())
         {
             // move towards player
             MoveTowardsTarget(PlayerController.instance.transform.position); // Change this to move towards memory of location
+            
         }
         else
         {
             Vector2[] moves = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
             int numRetries = 0;
-
             while (!movement.AttemptMove(moves[Random.Range(0, 4)]) || numRetries < maxMovementRetries)
                 numRetries++;
 
             // Otherwise do nothing!
-
         }
     }
 

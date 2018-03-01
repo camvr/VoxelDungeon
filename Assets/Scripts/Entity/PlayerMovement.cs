@@ -15,30 +15,6 @@ public class PlayerMovement : MonoBehaviour {
         anim.SetFloat("walkSpeedModifier", 1.8f / moveSpeed);
     }
 
-    // Update is called once per frame
-    /*void Update ()
-    {
-        if (playerMovement == null && GameManager.gameState == GameState.playerTurn)
-        {
-            if (Input.GetKey(KeyCode.A)) // -x
-            {
-                AttemptMove(Vector2.left);
-            }
-            if (Input.GetKey(KeyCode.D)) // +x
-            {
-                AttemptMove(Vector2.right);
-            }
-            if (Input.GetKey(KeyCode.W)) // +z
-            {
-                AttemptMove(Vector2.up);
-            }
-            if (Input.GetKey(KeyCode.S)) // -z
-            {
-                AttemptMove(Vector2.down);
-            }
-        }
-    }*/
-
     public bool AttemptMove(Vector2 dir)
     {
         if (playerMovement == null)
@@ -49,22 +25,21 @@ public class PlayerMovement : MonoBehaviour {
             RaycastHit ray;
             if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
             {
-                playerMovement = StartCoroutine(Move(dest));
+                playerMovement = StartCoroutine(SmoothMove(dest));
                 return true;
             }
 
             Debug.Log("Hit object: " + ray.transform.name);
-            GameManager.gameState = GameState.worldTurn;
         }
 
         return false;
     }
 
-    private IEnumerator Move(Vector3 dest)
+    private IEnumerator SmoothMove(Vector3 dest)
     {
         Vector3 start = transform.position;
         float t = 0.0f;
-       
+        
         // start walk animation
         anim.CrossFade("WalkState", animFade);
         anim.SetBool("isWalking", true);
@@ -85,8 +60,6 @@ public class PlayerMovement : MonoBehaviour {
         anim.SetBool("isIdle", true);
 
         playerMovement = null;
-
-        GameManager.gameState = GameState.worldTurn;
     }
 
     public void RotateToDir(Vector2 dir)

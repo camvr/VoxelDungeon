@@ -2,92 +2,83 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum GameState
-{
-    playerTurn,
-    worldTurn,
-    gameOver,
-}
-
 public class GameManager : MonoBehaviour
 {
     #region Singleton
-    public static GameManager instance = null;
+    [HideInInspector] public static GameManager instance = null;
     #endregion
 
-    [HideInInspector]
-    public static GameState gameState = GameState.playerTurn;
+    [HideInInspector] public BoardManager boardManager;
+    [HideInInspector] public bool playersTurn = true;
+    [HideInInspector] public bool gameOver = false;
+    public float turnDelay = 0.5f;
 
-    private LevelGenerator levelGenerator;
 
-    /* Prefabs */
-    public GameObject enemyPrefab;
+    private List<EnemyController> enemies;
+    private bool enemiesMoving = false;
+    private bool doingSetup = false;
 
-    /* Global Object Containers */
-    private GameObject enemyObjects;
 
-    private List<EnemyController> enemies = new List<EnemyController>();
-
-    void Awake () {
+    void Awake ()
+    {
         if (instance == null)
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
         DontDestroyOnLoad(gameObject);
 
-        /* Instantiate global containers */
-        enemyObjects = new GameObject("EnemyObjects");
-
-        /* Instantiate generation scripts */
-        levelGenerator = GetComponent<LevelGenerator>();
-
-        /* Run game setup */
+        enemies = new List<EnemyController>();
+        boardManager = GetComponent<BoardManager>();
         InitGame();
 	}
 
 
     private void InitGame()
     {
-        // Generate level
-        Vector3 playerStartPos = levelGenerator.Generate();
+        boardManager.Setup();
+    }
 
-        /* Place entities */
-
-        // Place the player
-        PlayerController.instance.transform.position = playerStartPos;
-
-        // Place enemies
-        // TODO: temporary
-        for (int i = 0; i < 10; i++)
-        {
-            GameObject enemyInstance = Instantiate(enemyPrefab, Map.GetLegalPosition(), Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
-            enemyInstance.transform.parent = enemyObjects.transform;
-            enemies.Add(enemyInstance.GetComponent<EnemyController>());
-        }
+    public void AddEnemy(EnemyController enemy)
+    {
+        enemies.Add(enemy);
     }
 
 
     // Update is called once per frame
-    void Update ()
+    private void Update ()
     {
-		/* Handle Game States */
-        switch (gameState)
+        if (gameOver)
         {
-            case GameState.worldTurn:
-                for (int i = 0; i < enemies.Count; i++)
-                {
-                    enemies[i].ChooseAction();
-                }
-
-                if (gameState != GameState.gameOver) // player is still alive
-                    gameState = GameState.playerTurn; // TODO: make sure this changes after skeleton has taken move
-
-                break;
-            case GameState.gameOver:
-                // game over screen
-                break;
-            default:
-                break;
+            playersTurn = false;
+            return;
         }
-	}
+
+        if (playersTurn || enemiesMoving || doingSetup)
+            return;
+
+        StartCoroutine(EnemyTurn());
+        
+    }
+
+    private IEnumerator EnemyTurn()
+    {
+        enemiesMoving = true;
+
+        yield return new WaitForSeconds(turnDelay);
+
+        if (enemies.Count == 0)
+        {
+            yield return new WaitForSeconds(turnDelay);
+        }
+        
+        for (int i = 0; i < enemies.Count; i++)
+        {
+            enemies[i].ChooseAction();
+            yield return new WaitForSeconds(0.05f);
+        }
+
+        playersTurn = true;
+        enemiesMoving = false;
+    }
 }
