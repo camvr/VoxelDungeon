@@ -18,7 +18,7 @@ public class EnemyMovement : MonoBehaviour {
         Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
 
         RaycastHit ray;
-        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
+        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f)) // TODO: improve quality of the results of this
         {
             RotateToDir(dir);
 

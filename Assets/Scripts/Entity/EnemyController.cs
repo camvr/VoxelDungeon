@@ -129,6 +129,7 @@ public class EnemyController : Interactable {
         return false;
     }
 
+    // TODO: implement more intuitive way of finding the best path
     private void MoveTowardsTarget(Vector3 target)
     {
         Vector2[] priorityMoves = new Vector2[4];

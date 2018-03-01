@@ -16,7 +16,7 @@ public class PlayerMovement : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update ()
+    /*void Update ()
     {
         if (playerMovement == null && GameManager.gameState == GameState.playerTurn)
         {
@@ -37,22 +37,25 @@ public class PlayerMovement : MonoBehaviour {
                 AttemptMove(Vector2.down);
             }
         }
-    }
+    }*/
 
     public bool AttemptMove(Vector2 dir)
     {
-        Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
-        RotateToDir(dir);
-
-        RaycastHit ray;
-        if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
+        if (playerMovement == null)
         {
-            playerMovement = StartCoroutine(Move(dest));
-            return true;
-        }
+            Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
+            RotateToDir(dir);
 
-        Debug.Log("Hit object: " + ray.transform.name);
-        GameManager.gameState = GameState.worldTurn;
+            RaycastHit ray;
+            if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
+            {
+                playerMovement = StartCoroutine(Move(dest));
+                return true;
+            }
+
+            Debug.Log("Hit object: " + ray.transform.name);
+            GameManager.gameState = GameState.worldTurn;
+        }
 
         return false;
     }

@@ -2,7 +2,7 @@
 
 [CreateAssetMenu(fileName = "New Equipment", menuName = "Inventory/Equipment")]
 public class Equipment : Item {
-    public EquipmentSlot slot;
+    public EquipmentType slot;
 
     public int defenseModifier;
     public int damageModifier;
@@ -15,4 +15,4 @@ public class Equipment : Item {
     }
 }
 
-public enum EquipmentSlot { Head, Chest, Legs, Weapon, Shield, }
+public enum EquipmentType { Head, Chest, Legs, Weapon, Shield, }
