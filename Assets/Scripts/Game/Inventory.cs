@@ -32,7 +32,7 @@ public class Inventory : MonoBehaviour {
         {
             if (items.Count >= maxSize)
             {
-                Debug.Log("Inventory Full"); // TODO placeholder
+                MessageUI.instance.Log("Inventory full!", Color.red);
                 return false;
             }
 

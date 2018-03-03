@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
 public class PlayerController : MonoBehaviour {
@@ -7,7 +9,6 @@ public class PlayerController : MonoBehaviour {
     public int viewRadius = 5;
 
     private PlayerMovement movement;
-    private EntityCombat combat;
 
     #region Singleton
     public static PlayerController instance;
@@ -22,12 +23,12 @@ public class PlayerController : MonoBehaviour {
 
         instance = this;
         movement = player.GetComponent<PlayerMovement>();
-        combat = player.GetComponent<EntityCombat>();
     }
     #endregion
 
     private void Update()
     {
+
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
@@ -35,21 +36,36 @@ public class PlayerController : MonoBehaviour {
             return;
         
         Vector2 move = new Vector2(0, 0);
+
         if (Input.GetKey(KeyCode.A)) // -x
         {
             move = Vector2.left;
         }
-        if (Input.GetKey(KeyCode.D)) // +x
+        else if (Input.GetKey(KeyCode.D)) // +x
         {
             move = Vector2.right;
         }
-        if (Input.GetKey(KeyCode.W)) // +z
+        else if (Input.GetKey(KeyCode.W)) // +z
         {
             move = Vector2.up;
         }
-        if (Input.GetKey(KeyCode.S)) // -z
+        else if (Input.GetKey(KeyCode.S)) // -z
         {
             move = Vector2.down;
+        }
+        else if (Input.GetKey(KeyCode.E)) // item pickup key
+        {
+            Debug.Log("Interacting with item");
+            foreach (Transform item in GameManager.instance.items)
+            {
+                ItemPickup currItem = item.GetComponent<ItemPickup>();
+                if (currItem.CanPickup(transform.position))
+                {
+                    currItem.Interact(); // interact with first item in list
+                    GameManager.instance.playersTurn = false;
+                    return;
+                }
+            }
         }
 
         // Check for legal move, give relevant actions
@@ -65,10 +81,11 @@ public class PlayerController : MonoBehaviour {
             {
                 movement.RotateToDir(move);
 
-                EntityStats enemyStats = hit.transform.gameObject.GetComponent<EntityStats>();
-
-                if (enemyStats != null)
-                    combat.Attack(enemyStats);
+                hit.transform.GetComponent<EnemyController>().Interact();
+            }
+            else if (hit.transform.tag == "Wall")
+            {
+                MessageUI.instance.Log("There's a wall in the way!", Color.white);
             }
 
             GameManager.instance.playersTurn = false;

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -3603,7 +3603,7 @@ MonoBehaviour:
   - {fileID: 191782, guid: c696a4164d35fba47823552c0e5f0d12, type: 2}
   - {fileID: 194322, guid: 9ba882aed9dc21047bca2bbebafc7e79, type: 2}
   wallTiles:
-  - {fileID: 1659749613228744, guid: d95df1ebcfaac844f8dea185541d4147, type: 2}
+  - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
 --- !u!114 &1661872040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3615,9 +3615,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1144fe3a0d84eb547bc1d6e749ed96f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  instance: {fileID: 0}
   enemyPrefab: {fileID: 1222471938327394, guid: e799858fbb80ee2489c6aa6d9c73d840,
     type: 2}
+  itemPrefabs:
+  - {fileID: 1175572375544444, guid: 5d946877bf9965440846b846ed696b4b, type: 2}
 --- !u!114 &1661872041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3629,7 +3630,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29f9043b9d3153a4892fb97d9a16c0a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boardManager: {fileID: 0}
   playersTurn: 1
   gameOver: 0
   turnDelay: 0.1

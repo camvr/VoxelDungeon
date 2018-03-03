@@ -31,11 +31,11 @@ public class EquipmentSlot : MonoBehaviour {
 
     public void UseItem()
     {
-        // doesn't do much...
+        /* doesn't do much...
         if (equipment != null)
         {
             equipment.Use();
-        }
+        }*/
     }
 
 }

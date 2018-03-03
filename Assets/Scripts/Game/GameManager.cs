@@ -7,10 +7,10 @@ public class GameManager : MonoBehaviour
     #region Singleton
     [HideInInspector] public static GameManager instance = null;
     #endregion
-
-    [HideInInspector] public BoardManager boardManager;
+    
     [HideInInspector] public bool playersTurn = true;
     [HideInInspector] public bool gameOver = false;
+    [HideInInspector] public List<Transform> items { get; private set; }
     public float turnDelay = 0.5f;
 
 
@@ -28,14 +28,14 @@ public class GameManager : MonoBehaviour
         DontDestroyOnLoad(gameObject);
 
         enemies = new List<EnemyController>();
-        boardManager = GetComponent<BoardManager>();
+        items = new List<Transform>();
         InitGame();
 	}
 
 
     private void InitGame()
     {
-        boardManager.Setup();
+        BoardManager.instance.Setup();
     }
 
     public void AddEnemy(EnemyController enemy)
@@ -43,6 +43,15 @@ public class GameManager : MonoBehaviour
         enemies.Add(enemy);
     }
 
+    public void AddItem(Transform item)
+    {
+        items.Add(item);
+    }
+
+    public void RemoveItem(Transform item)
+    {
+        items.Remove(item);
+    }
 
     // Update is called once per frame
     private void Update ()

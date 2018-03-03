@@ -9,11 +9,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e4cbc0ca6132ac4e92e4c5b3565c275, type: 3}
-  m_Name: Test Equipment
+  m_Name: Double-Headed Axe
   m_EditorClassIdentifier: 
-  name: Test Helmet
+  name: Double Headed Axe
   icon: {fileID: 21300000, guid: b3a1586cda5f99b4992a1c1ce7caf1d8, type: 3}
   isDefaultItem: 0
   slot: 3
   defenseModifier: 0
-  damageModifier: 5
+  damageModifier: 6

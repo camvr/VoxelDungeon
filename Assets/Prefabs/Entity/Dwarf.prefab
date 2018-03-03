@@ -11,6 +11,21 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1272506764368752}
   m_IsPrefabParent: 1
+--- !u!1 &1004233647902994
+GameObject:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 5
+  m_Component:
+  - component: {fileID: 4295055751886088}
+  m_Layer: 0
+  m_Name: Melee
+  m_TagString: RH_Melee
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
 --- !u!1 &1064287249664518
 GameObject:
   m_ObjectHideFlags: 1
@@ -314,6 +329,19 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &4295055751886088
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1004233647902994}
+  m_LocalRotation: {x: 0.39190385, y: 0.07003591, z: 0.07003592, w: 0.9146592}
+  m_LocalPosition: {x: -0.053, y: 0.114, z: 0.114}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_Children: []
+  m_Father: {fileID: 4524542539731454}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 45, y: 15, z: 15}
 --- !u!4 &4524542539731454
 Transform:
   m_ObjectHideFlags: 1
@@ -323,7 +351,8 @@ Transform:
   m_LocalRotation: {x: 0.9084527, y: 0.18105522, z: 0.19482619, w: -0.3224523}
   m_LocalPosition: {x: -0.13630675, y: -0.000000008847564, z: 0}
   m_LocalScale: {x: 1, y: 0.99999964, z: 0.99999976}
-  m_Children: []
+  m_Children:
+  - {fileID: 4295055751886088}
   m_Father: {fileID: 4116793983845010}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

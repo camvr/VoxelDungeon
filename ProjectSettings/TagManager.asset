@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Enemy
   - Wall
+  - Item
+  - RH_Melee
+  - LH_Block
   layers:
   - Default
   - TransparentFX

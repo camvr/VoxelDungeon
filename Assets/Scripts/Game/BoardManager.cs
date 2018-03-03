@@ -10,11 +10,19 @@ public enum TileType
 
 public class BoardManager : MonoBehaviour {
 
+    public GameObject enemyPrefab;
+    public GameObject[] itemPrefabs;
+
+    private GameObject enemyObjects;
+    private GameObject itemObjects;
+    private LevelGenerator levelGenerator;
+    private TileType[][] board;
+
     #region Singleton
 
-    [HideInInspector] public BoardManager instance = null;
+    [HideInInspector] public static BoardManager instance = null;
 
-    private void Start()
+    private void Awake()
     {
         if (instance != null)
         {
@@ -23,21 +31,12 @@ public class BoardManager : MonoBehaviour {
         }
 
         instance = this;
+        levelGenerator = GetComponentInParent<LevelGenerator>();
+        enemyObjects = new GameObject("EnemyTiles");
+        itemObjects = new GameObject("ItemTiles");
     }
 
     #endregion
-
-    public GameObject enemyPrefab;
-
-    private GameObject enemyObjects;
-    private LevelGenerator levelGenerator;
-    private TileType[][] board;
-
-    private void Awake()
-    {
-        levelGenerator = GetComponentInParent<LevelGenerator>();
-        enemyObjects = new GameObject("EnemyTiles");
-    }
 
     public void Setup()
     {
@@ -56,6 +55,14 @@ public class BoardManager : MonoBehaviour {
             GameObject enemyInstance = Instantiate(enemyPrefab, GetLegalPosition(), Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
             enemyInstance.transform.parent = enemyObjects.transform;
             GameManager.instance.AddEnemy(enemyInstance.GetComponent<EnemyController>());
+        }
+
+        // Place items for testing
+        for (int i = 0; i < 10; i++)
+        {
+            GameObject itemInstance = Instantiate(itemPrefabs[0], GetLegalPosition(), Quaternion.Euler(90, 45, 90)) as GameObject;
+            itemInstance.transform.parent = itemObjects.transform;
+            GameManager.instance.AddItem(itemInstance.transform);
         }
     }
 
@@ -77,5 +84,12 @@ public class BoardManager : MonoBehaviour {
     {
         TileType tile = board[x][z];
         return tile == TileType.Floor || tile == TileType.Item;
+    }
+
+    public void DropItem(Item item, Vector3 position)
+    {
+        GameObject itemInstance = Instantiate(item.prefab, position, Quaternion.Euler(90, 45, 90)) as GameObject;
+        itemInstance.transform.parent = itemObjects.transform;
+        GameManager.instance.AddItem(itemInstance.transform);
     }
 }

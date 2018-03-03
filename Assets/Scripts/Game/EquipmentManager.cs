@@ -16,6 +16,7 @@ public class EquipmentManager : MonoBehaviour {
     Inventory inventory;
 
     Equipment[] currentEquipment;
+    private GameObject[] equipmentPrefabs;
 
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChangedCallback;
@@ -25,6 +26,7 @@ public class EquipmentManager : MonoBehaviour {
         inventory = Inventory.instance;
         int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         currentEquipment = new Equipment[numSlots];
+        equipmentPrefabs = new GameObject[numSlots];
     }
 
     public void Equip(Equipment newItem)
@@ -40,6 +42,20 @@ public class EquipmentManager : MonoBehaviour {
             onEquipmentChangedCallback.Invoke(newItem, currentEquipment[equipSlot]);
 
         currentEquipment[equipSlot] = newItem;
+
+        // Equip prefab on player model
+        switch (newItem.slot)
+        {
+            case EquipmentType.Weapon:
+                Transform parent = GameObject.FindGameObjectWithTag("RH_Melee").transform;
+                if (parent != null)
+                    equipmentPrefabs[equipSlot] = Instantiate(newItem.prefab, parent) as GameObject;
+                else
+                    Debug.Log("Couldn't wield weapon");
+                break;
+            default:
+                break;
+        }
     }
 
     public void Unequip(int equipSlot)
@@ -52,6 +68,10 @@ public class EquipmentManager : MonoBehaviour {
                 onEquipmentChangedCallback.Invoke(null, currentEquipment[equipSlot]);
 
             currentEquipment[equipSlot] = null;
+
+            // Unequip prefab on player model
+            Destroy(equipmentPrefabs[equipSlot]);
+            equipmentPrefabs[equipSlot] = null;
         }
     }
 }
