@@ -5,22 +5,22 @@ using UnityEngine;
 [RequireComponent(typeof(EntityStats))]
 [RequireComponent(typeof(EntityCombat))]
 public class EnemyController : Interactable {
-    public int viewRadius = 5;
+
+    public int viewRadius = 7;
+    public bool isDead = false;
 
     private int maxMovementRetries = 8;
-
     private EnemyMovement movement;
     private EnemyStats stats;
     private EntityCombat combat;
-
     private PlayerController playerInstance;
+    private Transform playerMemory = null;
 
     private void Start()
     {
         movement = GetComponent<EnemyMovement>();
         stats = GetComponent<EnemyStats>();
         combat = GetComponent<EntityCombat>();
-
         playerInstance = PlayerController.instance;
     }
 
@@ -59,7 +59,11 @@ public class EnemyController : Interactable {
         else if (PlayerInView())
         {
             // move towards player
-            MoveTowardsTarget(PlayerController.instance.transform.position); // Change this to move towards memory of location
+            Vector3 target = PlayerController.instance.transform.position;
+            if (playerMemory != null)
+                target = playerMemory.position;
+
+            MoveTowardsTarget(target); // Change this to move towards memory of location
             
         }
         else
@@ -115,12 +119,17 @@ public class EnemyController : Interactable {
         if ((playerPos - enemyPos).sqrMagnitude < viewRadius*viewRadius)
         {
             // Player in view radius
-            RaycastHit hit; // TODO: Check if a wall is blocking the way
-            Physics.Raycast(enemyPos, playerPos - enemyPos, out hit, viewRadius);
-            Debug.Log("Skeleton sees: " + hit.transform.name);
-            return hit.transform == PlayerController.instance.player.transform;
-
-            // TODO: Keep a memory of last known position to move to if player is suddenly not visible
+            RaycastHit hit;
+            Physics.Linecast(enemyPos, playerPos, out hit);
+            if (hit.transform == null || hit.transform.tag != "Wall")
+            {
+                playerMemory = playerInstance.transform;
+                return true;
+            }
+            else if (playerMemory != null && Mathf.Approximately((transform.position - playerMemory.position).sqrMagnitude, 0))
+            {
+                playerMemory = null;
+            }
         }
 
         return false;

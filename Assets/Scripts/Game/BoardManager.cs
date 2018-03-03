@@ -35,7 +35,7 @@ public class BoardManager : MonoBehaviour {
 
     private void Awake()
     {
-        levelGenerator = GetComponent<LevelGenerator>();
+        levelGenerator = GetComponentInParent<LevelGenerator>();
         enemyObjects = new GameObject("EnemyTiles");
     }
 

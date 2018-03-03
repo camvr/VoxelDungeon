@@ -2,6 +2,7 @@
 
 public class EntityStats : MonoBehaviour {
 
+    public string entityName = "";
     public int maxHealth = 100;
     public int currentHealth { get; private set; }
 
@@ -19,7 +20,8 @@ public class EntityStats : MonoBehaviour {
         damage -= defense.GetValue();
 
         currentHealth -= Mathf.Clamp(damage, 0, int.MaxValue);
-        Debug.Log(transform.name + " takes " + damage + " damage."); // TODO temporary
+
+        MessageUI.instance.Log(entityName + " takes " + damage + " damage.", Color.white);
 
         if (currentHealth < 0)
         {
@@ -29,6 +31,6 @@ public class EntityStats : MonoBehaviour {
 
     public virtual void Die()
     {
-        Debug.Log(transform.name + " died.");
+        //Debug.Log(entityName + " died.");
     }
 }

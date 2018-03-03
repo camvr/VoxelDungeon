@@ -1,17 +1,22 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public class CameraController : MonoBehaviour {
     public Vector3 offset;
     public float scrollSpeed = 2.0f;
     public float maxZoom = 4f;
+    public LayerMask fadeMask;
 
     private Transform target;
     private Vector3 zoomOffset;
+    private List<Transform> hiddenWalls;
 
     private void Start()
     {
         zoomOffset = new Vector3(0, 0, 0);
         target = PlayerController.instance.transform;
+        hiddenWalls = new List<Transform>();
     }
 
     void FixedUpdate()
@@ -29,5 +34,58 @@ public class CameraController : MonoBehaviour {
 
         transform.position = target.position + offset + zoomOffset;
         transform.LookAt(target);
+
+        // Raycast to player
+        // change alpha of any walls in the way
+        RaycastHit[] hits = Physics.RaycastAll(transform.position, target.position - transform.position, (target.position - transform.position).magnitude, fadeMask);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (!hiddenWalls.Contains(hits[i].transform))
+            {
+                hiddenWalls.Add(hits[i].transform);
+                //hits[i].transform.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 0.1f);
+                StartCoroutine(FadeWall(hits[i].transform, 0.0f, 0.5f));
+            }
+        }
+
+        for (int i = 0; i < hiddenWalls.Count; i++)
+        {
+            bool isHit = false;
+            for (int j = 0; j < hits.Length; j++)
+            {
+                if (hits[j].transform == hiddenWalls[i])
+                {
+                    isHit = true;
+                    break;
+                }
+            }
+            
+            if (!isHit)
+            {
+                Transform currWall = hiddenWalls[i];
+                //currWall.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
+                StartCoroutine(FadeWall(currWall, 1f, 0.5f));
+                hiddenWalls.RemoveAt(i);
+                i--;
+            }
+        }
+    }
+
+    private IEnumerator FadeWall(Transform target, float alpha, float fadeTime)
+    {
+        float start = target.GetComponent<MeshRenderer>().material.color.a;
+        float inverseFadeTime = 1f / fadeTime;
+
+        float t = 0;
+        while (t < 1.0f)
+        {
+            float currAlpha = Mathf.Lerp(start, alpha, t);
+            target.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, currAlpha);
+
+            t += Time.deltaTime * inverseFadeTime;
+            yield return new WaitForFixedUpdate();
+        }
+
+        target.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, alpha);
     }
 }

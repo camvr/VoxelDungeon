@@ -6,11 +6,14 @@ public class EnemyMovement : MonoBehaviour {
     public float animFade = 0.1f;
 
     private Animator anim;
+    private BoxCollider boxCollider;
+    private float inverseMoveSpeed;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
-
+        boxCollider = GetComponent<BoxCollider>();
+        inverseMoveSpeed = 1f / moveSpeed;
         anim.SetFloat("walkSpeedModifier", 1.8f / moveSpeed);
     }
 
@@ -23,7 +26,7 @@ public class EnemyMovement : MonoBehaviour {
         {
 
             RotateToDir(dir);
-
+            boxCollider.center += new Vector3(dir.x, 0, dir.y);
             StartCoroutine(SmoothMove(dest));
 
             return true;
@@ -35,6 +38,7 @@ public class EnemyMovement : MonoBehaviour {
     private IEnumerator SmoothMove(Vector3 dest)
     {
         Vector3 start = transform.position;
+        Vector3 cStart = boxCollider.center;
         float t = 0.0f;
 
         // start walk animation
@@ -45,11 +49,14 @@ public class EnemyMovement : MonoBehaviour {
         while (t < 1.0f)
         {
             transform.position = Vector3.Lerp(start, dest, t);
-            t += Time.deltaTime / moveSpeed;
+            boxCollider.center = Vector3.Lerp(cStart, new Vector3(0, cStart.y, 0), t);
+
+            t += Time.deltaTime * inverseMoveSpeed;
             yield return new WaitForFixedUpdate();
         }
 
         transform.position = dest;
+        boxCollider.center = new Vector3(0, cStart.y, 0);
 
         // return to idle animation
         anim.CrossFade("IdleState", animFade);

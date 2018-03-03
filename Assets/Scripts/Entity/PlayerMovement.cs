@@ -7,11 +7,14 @@ public class PlayerMovement : MonoBehaviour {
 
     private Animator anim;
     private Coroutine playerMovement;
+    private BoxCollider boxCollider;
+    private float inverseMoveSpeed;
 
     void Start ()
     {
         anim = GetComponent<Animator>();
-
+        boxCollider = GetComponent<BoxCollider>();
+        inverseMoveSpeed = 1f / moveSpeed;
         anim.SetFloat("walkSpeedModifier", 1.8f / moveSpeed);
     }
 
@@ -25,6 +28,7 @@ public class PlayerMovement : MonoBehaviour {
             RaycastHit ray;
             if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
             {
+                boxCollider.center += new Vector3(dir.x, 0, dir.y);
                 playerMovement = StartCoroutine(SmoothMove(dest));
                 return true;
             }
@@ -38,6 +42,7 @@ public class PlayerMovement : MonoBehaviour {
     private IEnumerator SmoothMove(Vector3 dest)
     {
         Vector3 start = transform.position;
+        Vector3 cStart = boxCollider.center;
         float t = 0.0f;
         
         // start walk animation
@@ -48,11 +53,14 @@ public class PlayerMovement : MonoBehaviour {
         while (t < 1.0f)
         {
             transform.position = Vector3.Lerp(start, dest, t);
-            t += Time.deltaTime / moveSpeed;
+            boxCollider.center = Vector3.Lerp(cStart, new Vector3(0, cStart.y, 0), t); // TODO: possibly switch this collider box trick to an available tiles trick instead
+
+            t += Time.deltaTime * inverseMoveSpeed;
             yield return new WaitForFixedUpdate();
         }
 
         transform.position = dest;
+        boxCollider.center = new Vector3(0, cStart.y, 0);
 
         // return to idle animation
         anim.CrossFade("IdleState", animFade);

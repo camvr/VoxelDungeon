@@ -25,7 +25,6 @@ public class GameManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-
         DontDestroyOnLoad(gameObject);
 
         enemies = new List<EnemyController>();
@@ -48,13 +47,8 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update ()
     {
-        if (gameOver)
-        {
-            playersTurn = false;
-            return;
-        }
 
-        if (playersTurn || enemiesMoving || doingSetup)
+        if (playersTurn || enemiesMoving || doingSetup || gameOver)
             return;
 
         StartCoroutine(EnemyTurn());
@@ -64,6 +58,19 @@ public class GameManager : MonoBehaviour
     private IEnumerator EnemyTurn()
     {
         enemiesMoving = true;
+
+        // Check and handle if any are dead
+        foreach (EnemyController enemy in enemies.ToArray())
+        {
+            if (enemy.isDead)
+            {
+                // Play death animation
+                // drop loot and give XP
+                //DestroyObject(enemy.enemyObject);
+                enemy.gameObject.SetActive(false);
+                enemies.Remove(enemy);
+            }
+        }
 
         yield return new WaitForSeconds(turnDelay);
 

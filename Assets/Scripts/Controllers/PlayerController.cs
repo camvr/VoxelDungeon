@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
     public int viewRadius = 5;
 
     private PlayerMovement movement;
+    private EntityCombat combat;
 
     #region Singleton
     public static PlayerController instance;
@@ -21,6 +22,7 @@ public class PlayerController : MonoBehaviour {
 
         instance = this;
         movement = player.GetComponent<PlayerMovement>();
+        combat = player.GetComponent<EntityCombat>();
     }
     #endregion
 
@@ -29,7 +31,7 @@ public class PlayerController : MonoBehaviour {
         if (EventSystem.current.IsPointerOverGameObject())
             return;
 
-        if (!GameManager.instance.playersTurn)
+        if (!GameManager.instance.playersTurn || GameManager.instance.gameOver)
             return;
         
         Vector2 move = new Vector2(0, 0);
@@ -59,12 +61,17 @@ public class PlayerController : MonoBehaviour {
             {
                 movement.AttemptMove(move);
             }
+            else if (hit.transform.tag == "Enemy")
+            {
+                movement.RotateToDir(move);
+
+                EntityStats enemyStats = hit.transform.gameObject.GetComponent<EntityStats>();
+
+                if (enemyStats != null)
+                    combat.Attack(enemyStats);
+            }
 
             GameManager.instance.playersTurn = false;
-            /*else if (hit.transform.tag == "enemy") // this will not work and needs to be changed
-            {
-                // attack
-            }*/
         }
             
     }
