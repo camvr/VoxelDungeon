@@ -14,9 +14,9 @@ public class Stat {
 
     public int GetValue()
     {
-        int finalValue = Random.Range(minValue, maxValue);
-        modifiers.ForEach(x => finalValue += x);
-        return finalValue;
+        int totalValue = maxValue;
+        modifiers.ForEach(x => totalValue += x);
+        return Random.Range(minValue, totalValue);
     }
 
     public void AddModifier(int modifier)

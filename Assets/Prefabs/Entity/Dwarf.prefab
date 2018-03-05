@@ -577,6 +577,8 @@ MonoBehaviour:
   defense:
     minValue: 0
     maxValue: 0
+  healthText: {fileID: 0}
+  healthBar: {fileID: 0}
 --- !u!114 &114603514170595762
 MonoBehaviour:
   m_ObjectHideFlags: 1

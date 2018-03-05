@@ -11,7 +11,7 @@ public class Item : ScriptableObject {
     public virtual void Use()
     {
         // TODO temporary
-        Debug.Log("Using " + name);
+        //Debug.Log("Using " + name);
     }
 
     public void RemoveFromInventory()

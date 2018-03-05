@@ -14,10 +14,10 @@ public class EntityStats : MonoBehaviour {
         currentHealth = maxHealth;
     }
 
-    public void Damage(int damage)
+    public virtual void Damage(int damage)
     {
         // TODO: play with this mechanic
-        damage -= defense.GetValue();
+        damage -= Mathf.Clamp(defense.GetValue(), 0, int.MaxValue);
 
         currentHealth -= Mathf.Clamp(damage, 0, int.MaxValue);
 
