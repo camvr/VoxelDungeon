@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 
 public enum TileType
 {
@@ -11,7 +13,8 @@ public enum TileType
 public class BoardManager : MonoBehaviour {
 
     public GameObject enemyPrefab;
-    public GameObject[] itemPrefabs;
+    public int minEnemies = 8;
+    public int maxEnemies = 15;
 
     private GameObject enemyObjects;
     private GameObject itemObjects;
@@ -46,23 +49,18 @@ public class BoardManager : MonoBehaviour {
         /* Place entities */
 
         // Place the player
-        PlayerController.instance.transform.position = GetLegalPosition(); // TODO: set to entry point
+        Vector3 startPos = GetLegalPosition();
+        PlayerController.instance.transform.position = startPos; // TODO: set to entry point
 
         // Place enemies
-        // TODO: temporary
-        for (int i = 0; i < 10; i++)
+        int numEnemies = Random.Range(minEnemies, maxEnemies);
+        GameManager.instance.enemiesRemainingText.text = numEnemies.ToString();
+        for (int i = 0; i < numEnemies; i++)
         {
-            GameObject enemyInstance = Instantiate(enemyPrefab, GetLegalPosition(), Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
+            Vector3 enemyPos = GetLegalPosition();
+            GameObject enemyInstance = Instantiate(enemyPrefab, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
             enemyInstance.transform.parent = enemyObjects.transform;
-            GameManager.instance.AddEnemy(enemyInstance.GetComponent<EnemyController>());
-        }
-
-        // Place items for testing
-        for (int i = 0; i < 10; i++)
-        {
-            GameObject itemInstance = Instantiate(itemPrefabs[0], GetLegalPosition(), Quaternion.Euler(90, 45, 90)) as GameObject;
-            itemInstance.transform.parent = itemObjects.transform;
-            GameManager.instance.AddItem(itemInstance.transform);
+            enemyInstance.GetComponent<EnemyStats>().maxHealth = Random.Range(20, 40);
         }
     }
 
@@ -83,7 +81,7 @@ public class BoardManager : MonoBehaviour {
     public bool IsLegalPos(int x, int z)
     {
         TileType tile = board[x][z];
-        return tile == TileType.Floor || tile == TileType.Item;
+        return (tile == TileType.Floor || tile == TileType.Item);
     }
 
     public void DropItem(Item item, Vector3 position)

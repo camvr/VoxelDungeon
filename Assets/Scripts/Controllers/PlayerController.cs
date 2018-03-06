@@ -55,7 +55,6 @@ public class PlayerController : MonoBehaviour {
         }
         else if (Input.GetKey(KeyCode.E)) // item pickup key
         {
-            Debug.Log("Interacting with item");
             foreach (Transform item in GameManager.instance.items)
             {
                 ItemPickup currItem = item.GetComponent<ItemPickup>();
@@ -101,7 +100,6 @@ public class PlayerController : MonoBehaviour {
     public void KillPlayer()
     {
         // end the game
-        Debug.Log("game over");
-        GameManager.instance.gameOver = true;
+        GameManager.instance.EndGame();
     }
 }

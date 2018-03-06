@@ -19,7 +19,7 @@ public class CameraController : MonoBehaviour {
         hiddenWalls = new List<Transform>();
     }
 
-    void FixedUpdate()
+    void Update()
     {
         if (!GameManager.instance.gameOver)
         {
@@ -43,7 +43,6 @@ public class CameraController : MonoBehaviour {
             if (!hiddenWalls.Contains(hits[i].transform))
             {
                 hiddenWalls.Add(hits[i].transform);
-                //hits[i].transform.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 0.1f);
                 StartCoroutine(FadeWall(hits[i].transform, 0.0f, 0.5f));
             }
         }
@@ -63,7 +62,6 @@ public class CameraController : MonoBehaviour {
             if (!isHit)
             {
                 Transform currWall = hiddenWalls[i];
-                //currWall.GetComponent<MeshRenderer>().material.color = new Color(1f, 1f, 1f, 1f);
                 StartCoroutine(FadeWall(currWall, 1f, 0.5f));
                 hiddenWalls.RemoveAt(i);
                 i--;

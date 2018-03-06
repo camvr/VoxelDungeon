@@ -26,14 +26,12 @@ public class PlayerMovement : MonoBehaviour {
             RotateToDir(dir);
 
             RaycastHit ray;
-            if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f))
+            if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f) && BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
             {
                 boxCollider.center += new Vector3(dir.x, 0, dir.y);
                 playerMovement = StartCoroutine(SmoothMove(dest));
                 return true;
             }
-
-            Debug.Log("Hit object: " + ray.transform.name);
         }
 
         return false;
@@ -53,10 +51,10 @@ public class PlayerMovement : MonoBehaviour {
         while (t < 1.0f)
         {
             transform.position = Vector3.Lerp(start, dest, t);
-            boxCollider.center = Vector3.Lerp(cStart, new Vector3(0, cStart.y, 0), t); // TODO: possibly switch this collider box trick to an available tiles trick instead
+            boxCollider.center = Vector3.Lerp(cStart, new Vector3(0, cStart.y, 0), t);
 
             t += Time.deltaTime * inverseMoveSpeed;
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
 
         transform.position = dest;

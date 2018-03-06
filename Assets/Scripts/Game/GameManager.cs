@@ -1,19 +1,22 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     #region Singleton
     [HideInInspector] public static GameManager instance = null;
     #endregion
-    
+
     [HideInInspector] public bool playersTurn = true;
     [HideInInspector] public bool gameOver = false;
     [HideInInspector] public List<Transform> items { get; private set; }
-    public float turnDelay = 0.5f;
-
-
+    public float turnDelay = 0.25f;
+    public Text enemiesRemainingText;
+    public GameObject gameOverUI;
+    public GameObject levelCompleteUI;
+    
     private List<EnemyController> enemies;
     private bool enemiesMoving = false;
     private bool doingSetup = false;
@@ -53,9 +56,29 @@ public class GameManager : MonoBehaviour
         items.Remove(item);
     }
 
+    public void EndGame()
+    {
+        if (!gameOver)
+        {
+            gameOver = true;
+            gameOverUI.SetActive(true);
+        }   
+    }
+
+    public void LevelComplete()
+    {
+        if (!gameOver)
+        {
+            gameOver = true;
+            levelCompleteUI.SetActive(true);
+        }
+    }
+
     // Update is called once per frame
     private void Update ()
     {
+        if (enemies.Count <= 0)
+            LevelComplete();
 
         if (playersTurn || enemiesMoving || doingSetup || gameOver)
             return;
@@ -73,26 +96,23 @@ public class GameManager : MonoBehaviour
         {
             if (enemy.isDead)
             {
-                // Play death animation
-                // drop loot and give XP
-                //DestroyObject(enemy.enemyObject);
                 enemy.gameObject.SetActive(false);
                 enemies.Remove(enemy);
+                enemiesRemainingText.text = enemies.Count.ToString();
             }
         }
 
         yield return new WaitForSeconds(turnDelay);
 
-        if (enemies.Count == 0)
+        foreach (EnemyController enemy in enemies)
         {
-            yield return new WaitForSeconds(turnDelay);
+            if (!enemy.isDead)
+            {
+                enemy.ChooseAction();
+            }
         }
-        
-        for (int i = 0; i < enemies.Count; i++)
-        {
-            enemies[i].ChooseAction();
-            yield return new WaitForSeconds(0.05f);
-        }
+
+        yield return new WaitForSeconds(turnDelay);
 
         playersTurn = true;
         enemiesMoving = false;

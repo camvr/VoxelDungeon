@@ -465,12 +465,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   entityName: Skeleton
   maxHealth: 25
+  currentHealth: 0
   damage:
     minValue: 0
     maxValue: 5
   defense:
     minValue: 0
     maxValue: 0
+  drops:
+  - {fileID: 11400000, guid: 546c0637dbcb3dd40b0041d412f223bc, type: 2}
+  - {fileID: 11400000, guid: 2a6425fa25f0f4247a01ef6927082f23, type: 2}
+  - {fileID: 11400000, guid: 5c2820d87381d4d49a4d799428454df2, type: 2}
+  - {fileID: 11400000, guid: 86b6d38f06b21f045a9770798c8b8632, type: 2}
+  dropChance: 0.3
 --- !u!114 &114634503772165258
 MonoBehaviour:
   m_ObjectHideFlags: 1

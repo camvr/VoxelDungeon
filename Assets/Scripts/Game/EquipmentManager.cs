@@ -13,10 +13,10 @@ public class EquipmentManager : MonoBehaviour {
     }
     #endregion
 
-    Inventory inventory;
+    public GameObject[] weapons;
 
-    Equipment[] currentEquipment;
-    private GameObject[] equipmentPrefabs;
+    private Inventory inventory;
+    private Equipment[] currentEquipment;
 
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChangedCallback;
@@ -26,17 +26,20 @@ public class EquipmentManager : MonoBehaviour {
         inventory = Inventory.instance;
         int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         currentEquipment = new Equipment[numSlots];
-        equipmentPrefabs = new GameObject[numSlots];
     }
 
     public void Equip(Equipment newItem)
     {
         int equipSlot = (int)newItem.slot;
 
-        if (currentEquipment[equipSlot] != null)
+        /*if (currentEquipment[equipSlot] != null)
         {
             inventory.Add(currentEquipment[equipSlot]);
-        }
+            
+        }*/
+
+        // Unequip anything already in the equipment slot
+        Unequip(equipSlot);
 
         if (onEquipmentChangedCallback != null)
             onEquipmentChangedCallback.Invoke(newItem, currentEquipment[equipSlot]);
@@ -47,11 +50,14 @@ public class EquipmentManager : MonoBehaviour {
         switch (newItem.slot)
         {
             case EquipmentType.Weapon:
-                Transform parent = GameObject.FindGameObjectWithTag("RH_Melee").transform;
-                if (parent != null)
-                    equipmentPrefabs[equipSlot] = Instantiate(newItem.prefab, parent) as GameObject;
-                else
-                    Debug.Log("Couldn't wield weapon");
+                foreach (GameObject weapon in weapons)
+                {
+                    if (weapon.GetComponent<ItemPickup>().item == newItem)
+                    {
+                        weapon.SetActive(true);
+                        break;
+                    }
+                }
                 break;
             default:
                 break;
@@ -66,12 +72,21 @@ public class EquipmentManager : MonoBehaviour {
 
             if (onEquipmentChangedCallback != null)
                 onEquipmentChangedCallback.Invoke(null, currentEquipment[equipSlot]);
+            
+            // Unequip prefab on player model
+            switch (equipSlot)
+            {
+                case (int)EquipmentType.Weapon:
+                    foreach (GameObject weapon in weapons)
+                    {
+                        weapon.SetActive(false);
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             currentEquipment[equipSlot] = null;
-
-            // Unequip prefab on player model
-            Destroy(equipmentPrefabs[equipSlot]);
-            equipmentPrefabs[equipSlot] = null;
         }
     }
 }

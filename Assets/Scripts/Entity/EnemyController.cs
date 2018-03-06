@@ -22,6 +22,7 @@ public class EnemyController : Interactable {
         stats = GetComponent<EnemyStats>();
         combat = GetComponent<EntityCombat>();
         playerInstance = PlayerController.instance;
+        GameManager.instance.AddEnemy(this);
     }
 
     public override void Interact()
@@ -63,17 +64,20 @@ public class EnemyController : Interactable {
             if (playerMemory != null)
                 target = playerMemory.position;
 
-            MoveTowardsTarget(target); // Change this to move towards memory of location
+            MoveTowardsTarget(target);
             
         }
         else
         {
             Vector2[] moves = { Vector2.up, Vector2.down, Vector2.left, Vector2.right };
-            int numRetries = 0;
-            while (!movement.AttemptMove(moves[Random.Range(0, 4)]) || numRetries < maxMovementRetries)
-                numRetries++;
-
+            
+            for (int i = 0; i < maxMovementRetries; i++)
+            {
+                if (movement.AttemptMove(moves[Random.Range(0, 4)]))
+                    return;
+            }
             // Otherwise do nothing!
+            return;
         }
     }
 
@@ -158,8 +162,10 @@ public class EnemyController : Interactable {
             priorityMoves[3] = dx > 0 ? Vector2.left : Vector2.right;
         }
 
-        int moveIndex = 0;
-        while (!movement.AttemptMove(priorityMoves[moveIndex]) && moveIndex < 4)
-            moveIndex++;
+        for (int i = 0; i < priorityMoves.Length; i++)
+        {
+            if (movement.AttemptMove(priorityMoves[i]))
+                return;
+        }
     }
 }

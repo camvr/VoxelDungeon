@@ -22,9 +22,8 @@ public class EnemyMovement : MonoBehaviour {
         Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
 
         RaycastHit hit;
-        if (!Physics.Linecast(transform.position, dest, out hit)) // TODO: improve quality of the results of this
+        if (!Physics.Linecast(transform.position, dest, out hit) && BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
         {
-
             RotateToDir(dir);
             boxCollider.center += new Vector3(dir.x, 0, dir.y);
             StartCoroutine(SmoothMove(dest));
@@ -52,7 +51,7 @@ public class EnemyMovement : MonoBehaviour {
             boxCollider.center = Vector3.Lerp(cStart, new Vector3(0, cStart.y, 0), t);
 
             t += Time.deltaTime * inverseMoveSpeed;
-            yield return new WaitForFixedUpdate();
+            yield return null;
         }
 
         transform.position = dest;
