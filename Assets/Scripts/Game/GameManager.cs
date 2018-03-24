@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,17 +10,20 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public static GameManager instance = null;
     #endregion
 
-    [HideInInspector] public bool playersTurn = true;
+    [HideInInspector] public bool playersTurn = false;
     [HideInInspector] public bool gameOver = false;
     [HideInInspector] public List<Transform> items { get; private set; }
     public float turnDelay = 0.25f;
+    public float startDelay = 2f;
     public Text enemiesRemainingText;
     public GameObject gameOverUI;
     public GameObject levelCompleteUI;
-    
+    public int totalLevels = 5;
+
+    private int level = 1;
     private List<EnemyController> enemies;
     private bool enemiesMoving = false;
-    private bool doingSetup = false;
+    private bool doingSetup = true;
 
 
     void Awake ()
@@ -28,17 +32,45 @@ public class GameManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
-        DontDestroyOnLoad(gameObject);
+        //DontDestroyOnLoad(gameObject);
+
+        //SetupLevel();
+	}
+
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        Debug.Log("Level Loaded");
+        level++;
+        SetupLevel();
+        Debug.Log(mode);
+    }
+
+    private void SetupLevel()
+    {
+        enemiesMoving = false;
+        playersTurn = false;
+        gameOver = false;
+        doingSetup = true;
 
         enemies = new List<EnemyController>();
         items = new List<Transform>();
-        InitGame();
-	}
 
-
-    private void InitGame()
-    {
+        enemies.Clear();
+        items.Clear();
         BoardManager.instance.Setup();
+
+        doingSetup = false;
+        playersTurn = true;
     }
 
     public void AddEnemy(EnemyController enemy)

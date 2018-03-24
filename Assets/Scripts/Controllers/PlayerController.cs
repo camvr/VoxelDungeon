@@ -8,6 +8,8 @@ public class PlayerController : MonoBehaviour {
     public GameObject player;
     public int viewRadius = 5;
 
+    public GameObject[] weapons;
+
     private PlayerMovement movement;
 
     #region Singleton

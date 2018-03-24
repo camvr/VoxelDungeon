@@ -13,7 +13,7 @@ public class EquipmentManager : MonoBehaviour {
     }
     #endregion
 
-    public GameObject[] weapons;
+    public GameObject[] weapons = PlayerController.instance.weapons;
 
     private Inventory inventory;
     private Equipment[] currentEquipment;

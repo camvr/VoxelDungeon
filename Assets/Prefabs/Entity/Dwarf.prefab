@@ -1056,6 +1056,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   player: {fileID: 1272506764368752}
   viewRadius: 5
+  weapons:
+  - {fileID: 1721118286769716}
+  - {fileID: 1743270670975890}
+  - {fileID: 1899425164614410}
+  - {fileID: 1016932572139652}
 --- !u!114 &114796955509640882
 MonoBehaviour:
   m_ObjectHideFlags: 1

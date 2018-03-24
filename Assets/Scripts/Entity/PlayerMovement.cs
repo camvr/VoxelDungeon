@@ -28,6 +28,10 @@ public class PlayerMovement : MonoBehaviour {
             RaycastHit ray;
             if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f) && BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
             {
+                // mark new position as unavailable
+                BoardManager.instance.SetAvailableTile((int)transform.position.x, (int)transform.position.z, true);
+                BoardManager.instance.SetAvailableTile((int)dest.x, (int)dest.z, false);
+
                 boxCollider.center += new Vector3(dir.x, 0, dir.y);
                 playerMovement = StartCoroutine(SmoothMove(dest));
                 return true;

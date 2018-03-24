@@ -11,6 +11,8 @@ public class LevelGenerator : MonoBehaviour
     public RandInt corridorLength = new RandInt(2, 10);     // The range of allowed lengths of corridors that connect rooms
     public GameObject[] floorTiles;                         // An array of floor tile prefabs
     public GameObject[] wallTiles;                          // An array of wall tile prefabs
+    public GameObject wallTorch;
+    public GameObject door;
 
     private TileType[][] tiles;                             // An array of tiles representing the level
     private Room[] rooms;                                   // An array of rooms for this level that are generated
@@ -28,6 +30,7 @@ public class LevelGenerator : MonoBehaviour
         SetTilesValuesForRooms();
         SetTilesValuesForCorridors();
         SetWallPositions();
+        //PlaceDungeonFeatures();
 
         InstantiateTiles();
 
@@ -155,6 +158,20 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    void PlaceDungeonFeatures()
+    {
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            for (int j = 0; j < tiles[i].Length; j++)
+            {
+                if (tiles[i][j] == TileType.Wall && NumSurroundingTiles(i, j, TileType.Floor) < 3) // TODO: change randomization to analytical tactic
+                {
+                    tiles[i][j] = TileType.WallTorch;
+                }
+            }
+        }
+    }
+
     void InstantiateTiles()
     {
         // Loop through all tiles in the tiles array
@@ -166,17 +183,21 @@ public class LevelGenerator : MonoBehaviour
                 switch (tiles[i][j])
                 {
                     case TileType.Floor:
-                        InstantiateFromArray(floorTiles[(i + j) % 2], i, 0, j);
+                        InstantiateTile(floorTiles[(i + j) % 2], i, 0, j);
                         break;
                     case TileType.Wall:
-                        InstantiateFromArray(wallTiles, i, 1.5f, j, 0, ((i + j) % 2)*90, 0);
+                        InstantiateTile(wallTiles, i, 1.5f, j, 0, ((i + j) % 2)*90, 0);
+                        break;
+                    case TileType.WallTorch:
+                        float facingAngle = 0f;
+                        InstantiateTile(wallTorch, i, 1.5f, j, 0, facingAngle, 0);
                         break;
                 }
             }
         }
     }
 
-    void InstantiateFromArray(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    void InstantiateTile(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
@@ -197,7 +218,7 @@ public class LevelGenerator : MonoBehaviour
         tileInstance.transform.parent = dungeonTiles.transform;
     }
 
-    void InstantiateFromArray(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    void InstantiateTile(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, zCoord);
@@ -213,5 +234,17 @@ public class LevelGenerator : MonoBehaviour
 
         // Set prefab's parent to the level holder
         tileInstance.transform.parent = dungeonTiles.transform;
+    }
+
+    int NumSurroundingTiles(int x, int y, TileType tile)
+    {
+        int num = 0;
+
+        if (x > 0 && tiles[x - 1][y] == tile) num++;
+        if (x < columns && tiles[x + 1][y] == tile) num++;
+        if (y > 0 && tiles[x][y - 1] == tile) num++;
+        if (y < rows && tiles[x][y + 1] == tile) num++;
+
+        return num;
     }
 }

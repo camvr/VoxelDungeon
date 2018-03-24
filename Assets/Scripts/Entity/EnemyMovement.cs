@@ -24,6 +24,10 @@ public class EnemyMovement : MonoBehaviour {
         RaycastHit hit;
         if (!Physics.Linecast(transform.position, dest, out hit) && BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
         {
+            // mark new position as unavailable
+            BoardManager.instance.SetAvailableTile((int)transform.position.x, (int)transform.position.z, true);
+            BoardManager.instance.SetAvailableTile((int)dest.x, (int)dest.z, false);
+
             RotateToDir(dir);
             boxCollider.center += new Vector3(dir.x, 0, dir.y);
             StartCoroutine(SmoothMove(dest));
