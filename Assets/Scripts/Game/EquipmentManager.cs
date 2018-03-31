@@ -4,22 +4,28 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour {
 
-    #region Singleton
-    public static EquipmentManager instance;
-
-    private void Awake()
-    {
-        instance = this;
-    }
-    #endregion
-
-    public GameObject[] weapons = PlayerController.instance.weapons;
+    public GameObject[] weapons;
+    public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
+    public OnEquipmentChanged onEquipmentChangedCallback;
 
     private Inventory inventory;
     private Equipment[] currentEquipment;
 
-    public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
-    public OnEquipmentChanged onEquipmentChangedCallback;
+    #region Singleton
+    [HideInInspector] public static EquipmentManager instance = null;
+
+    private void Awake()
+    {
+        if (instance != null)
+        {
+            Debug.LogWarning("Only one instance of Equipment manager allowed in the scene!");
+            return;
+        }
+
+        instance = this;
+        weapons = PlayerController.instance.weapons;
+    }
+    #endregion
 
     private void Start()
     {

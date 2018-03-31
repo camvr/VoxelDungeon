@@ -65,7 +65,6 @@ public class EnemyController : Interactable {
                 target = playerMemory.position;
 
             MoveTowardsTarget(target);
-            
         }
         else
         {

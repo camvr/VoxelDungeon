@@ -33,8 +33,6 @@ public class GameManager : MonoBehaviour
         else if (instance != this)
             Destroy(gameObject);
         //DontDestroyOnLoad(gameObject);
-
-        //SetupLevel();
 	}
 
     void OnEnable()
@@ -49,10 +47,8 @@ public class GameManager : MonoBehaviour
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        Debug.Log("Level Loaded");
         level++;
         SetupLevel();
-        Debug.Log(mode);
     }
 
     private void SetupLevel()
@@ -130,6 +126,7 @@ public class GameManager : MonoBehaviour
             {
                 enemy.gameObject.SetActive(false);
                 enemies.Remove(enemy);
+                BoardManager.instance.SetAvailableTile((int)enemy.transform.position.x, (int)enemy.transform.position.z, true);
                 enemiesRemainingText.text = enemies.Count.ToString();
             }
         }

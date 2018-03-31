@@ -12,7 +12,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] floorTiles;                         // An array of floor tile prefabs
     public GameObject[] wallTiles;                          // An array of wall tile prefabs
     public GameObject wallTorch;
-    public GameObject door;
+    public GameObject endTile;
 
     private TileType[][] tiles;                             // An array of tiles representing the level
     private Room[] rooms;                                   // An array of rooms for this level that are generated

@@ -7,6 +7,7 @@ public enum TileType
     Wall,
     WallTorch,
     Floor,
+    exit,
     Empty,
     Item,
 }
@@ -39,8 +40,6 @@ public class BoardManager : MonoBehaviour {
         levelGenerator = GetComponentInParent<LevelGenerator>();
         enemyObjects = new GameObject("EnemyTiles");
         itemObjects = new GameObject("ItemTiles");
-
-        Debug.Log("We got here?");
     }
 
     #endregion
