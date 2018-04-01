@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -4263,7 +4263,7 @@ MonoBehaviour:
   wallTiles:
   - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
   wallTorch: {fileID: 170480, guid: 9ce968cea5901a94b85559bae8987bec, type: 2}
-  endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
+  endTile: {fileID: 0}
 --- !u!114 &1558163041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5360,6 +5360,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   totalLevels: 5
+  allItemRefs:
+  - {fileID: 11400000, guid: 86b6d38f06b21f045a9770798c8b8632, type: 2}
+  - {fileID: 11400000, guid: 5c2820d87381d4d49a4d799428454df2, type: 2}
+  - {fileID: 11400000, guid: 2a6425fa25f0f4247a01ef6927082f23, type: 2}
+  - {fileID: 11400000, guid: 546c0637dbcb3dd40b0041d412f223bc, type: 2}
 --- !u!4 &2112790492
 Transform:
   m_ObjectHideFlags: 0

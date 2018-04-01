@@ -7,8 +7,7 @@ public class EquipmentManager : MonoBehaviour {
     public GameObject[] weapons;
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChangedCallback;
-
-    private Inventory inventory;
+    
     private Equipment[] currentEquipment;
 
     #region Singleton
@@ -24,12 +23,11 @@ public class EquipmentManager : MonoBehaviour {
 
         instance = this;
         weapons = PlayerController.instance.weapons;
-        inventory = Inventory.instance;
         int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         currentEquipment = new Equipment[numSlots];
     }
     #endregion
-    
+
     public void Equip(Equipment newItem)
     {
         int equipSlot = (int)newItem.slot;
@@ -70,7 +68,7 @@ public class EquipmentManager : MonoBehaviour {
     {
         if (currentEquipment[equipSlot] != null)
         {
-            inventory.Add(currentEquipment[equipSlot]);
+            Inventory.instance.Add(currentEquipment[equipSlot]);
 
             if (onEquipmentChangedCallback != null)
                 onEquipmentChangedCallback.Invoke(null, currentEquipment[equipSlot]);

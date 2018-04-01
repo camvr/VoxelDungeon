@@ -15,6 +15,12 @@ public class EquipmentUI : MonoBehaviour {
         equipment.onEquipmentChangedCallback += UpdateUI;
 
         slots = equipmentParent.GetComponentsInChildren<EquipmentSlot>();
+
+        foreach (Equipment item in equipment.GetEquipedState())
+        {
+            if (item != null)
+                UpdateUI(item, null);
+        }
     }
 
     void UpdateUI(Equipment newItem, Equipment oldItem)
