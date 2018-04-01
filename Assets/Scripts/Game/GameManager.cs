@@ -15,16 +15,14 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public List<Transform> items { get; private set; }
     public float turnDelay = 0.25f;
     public float startDelay = 2f;
-    public Text enemiesRemainingText;
-    public GameObject gameOverUI;
-    public GameObject levelCompleteUI;
-    public int totalLevels = 5;
-
-    private int level = 1;
+    
     private List<EnemyController> enemies;
     private bool enemiesMoving = false;
     private bool doingSetup = true;
 
+    private GameObject gameOverUI;
+    private GameObject levelCompleteUI;
+    private GameObject floorNumberText;
 
     void Awake ()
     {
@@ -47,12 +45,19 @@ public class GameManager : MonoBehaviour
 
     void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
     {
-        level++;
         SetupLevel();
     }
 
     private void SetupLevel()
     {
+        gameOverUI = GameObject.Find("GameOverBG");
+        levelCompleteUI = GameObject.Find("LevelCompletePanel");
+        floorNumberText = GameObject.Find("FloorNumberText");
+
+        floorNumberText.GetComponent<Text>().text = "Floor " + LevelManager.instance.GetLevel();
+        gameOverUI.SetActive(false);
+        levelCompleteUI.SetActive(false);
+
         enemiesMoving = false;
         playersTurn = false;
         gameOver = false;
@@ -64,6 +69,9 @@ public class GameManager : MonoBehaviour
         enemies.Clear();
         items.Clear();
         BoardManager.instance.Setup();
+
+        // Load state from previous level if applicable
+        LevelManager.instance.LoadState();
 
         doingSetup = false;
         playersTurn = true;
@@ -105,14 +113,13 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update ()
     {
-        if (enemies.Count <= 0)
+        if (Input.GetKey(KeyCode.P)) // TODO: temp god mode command
             LevelComplete();
 
         if (playersTurn || enemiesMoving || doingSetup || gameOver)
             return;
 
         StartCoroutine(EnemyTurn());
-        
     }
 
     private IEnumerator EnemyTurn()
@@ -127,7 +134,6 @@ public class GameManager : MonoBehaviour
                 enemy.gameObject.SetActive(false);
                 enemies.Remove(enemy);
                 BoardManager.instance.SetAvailableTile((int)enemy.transform.position.x, (int)enemy.transform.position.z, true);
-                enemiesRemainingText.text = enemies.Count.ToString();
             }
         }
 

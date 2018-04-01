@@ -69,7 +69,6 @@ public class BoardManager : MonoBehaviour {
 
         // Place enemies
         int numEnemies = Random.Range(minEnemies, maxEnemies);
-        GameManager.instance.enemiesRemainingText.text = numEnemies.ToString();
         for (int i = 0; i < numEnemies; i++)
         {
             Vector3 enemyPos = GetLegalPosition();

@@ -50,5 +50,4 @@ public class PlayerStats : EntityStats {
         MessageUI.instance.Log("You died.", new Color(0.7f, 0.0f, 0.0f));
         PlayerController.instance.KillPlayer(); // game over!
     }
-
 }

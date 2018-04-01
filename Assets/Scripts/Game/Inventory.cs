@@ -52,4 +52,15 @@ public class Inventory : MonoBehaviour {
         if (onItemChangedCallback != null)
             onItemChangedCallback.Invoke();
     }
+
+    public void SetInventoryState(List<Item> savedItems)
+    {
+        foreach (Item item in savedItems)
+        {
+            if (item != null)
+            {
+                Add(item);
+            }
+        }
+    }
 }

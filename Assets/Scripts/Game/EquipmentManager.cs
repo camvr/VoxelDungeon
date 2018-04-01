@@ -24,16 +24,12 @@ public class EquipmentManager : MonoBehaviour {
 
         instance = this;
         weapons = PlayerController.instance.weapons;
-    }
-    #endregion
-
-    private void Start()
-    {
         inventory = Inventory.instance;
         int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         currentEquipment = new Equipment[numSlots];
     }
-
+    #endregion
+    
     public void Equip(Equipment newItem)
     {
         int equipSlot = (int)newItem.slot;
@@ -93,6 +89,22 @@ public class EquipmentManager : MonoBehaviour {
             }
 
             currentEquipment[equipSlot] = null;
+        }
+    }
+
+    public Equipment[] GetEquipedState()
+    {
+        return currentEquipment;
+    }
+
+    public void SetEquipedState(Equipment[] equipment)
+    {
+        foreach (Equipment item in equipment)
+        {
+            if (item != null)
+            {
+                Equip(item);
+            }
         }
     }
 }
