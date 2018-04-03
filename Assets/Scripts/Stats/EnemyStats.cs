@@ -1,9 +1,23 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class EnemyStats : EntityStats {
 
-    public Item[] drops;
-    public float dropChance = 0.3f;
+    public float dropChance = 0.6f;
+
+    private List<Item> drops;
+
+    public void SetDrops(List<Item> _drops)
+    {
+        drops = _drops;
+    }
+
+    public void SetModifiers(Equipment newItem)
+    {
+        defense.AddModifier(newItem.defenseModifier);
+        damage.AddModifier(newItem.damageModifier);
+        strength.AddModifier(newItem.strengthModifier);
+    }
 
     public override void Die()
     {
@@ -13,6 +27,6 @@ public class EnemyStats : EntityStats {
         // show death animation
         
         if (Random.Range(0f, 1f) < dropChance) // loot drops and player XP?
-            BoardManager.instance.DropItem(drops[Random.Range(0, drops.Length - 1)], transform.position);
+            BoardManager.instance.DropItem(drops[Random.Range(0, drops.Count - 1)], transform.position);
     }
 }

@@ -77,8 +77,7 @@ public class BoardManager : MonoBehaviour {
             enemyInstance.transform.parent = enemyObjects.transform;
 
             // Set enemy instance's stats
-            enemyInstance.GetComponent<EnemyStats>().maxHealth = Random.Range(20, 40);
-            
+            enemyInstance.GetComponent<EnemyController>().RandomizeStats(LevelManager.instance.GetLevel());
         }
     }
 

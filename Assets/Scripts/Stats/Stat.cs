@@ -12,6 +12,12 @@ public class Stat {
 
     private List<int> modifiers = new List<int>();
 
+    public void InitValue(int min, int max)
+    {
+        minValue = min;
+        maxValue = max;
+    }
+
     public int GetValue()
     {
         int totalValue = maxValue;

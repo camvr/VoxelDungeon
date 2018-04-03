@@ -17,4 +17,5 @@ MonoBehaviour:
   isDefaultItem: 0
   slot: 3
   defenseModifier: 2
-  damageModifier: 3
+  damageModifier: 4
+  strengthModifier: 0

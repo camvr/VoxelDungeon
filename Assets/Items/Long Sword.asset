@@ -16,5 +16,6 @@ MonoBehaviour:
   prefab: {fileID: 1562462291767744, guid: aad820782b3c76b44beb41775e323759, type: 2}
   isDefaultItem: 0
   slot: 3
-  defenseModifier: 2
+  defenseModifier: 3
   damageModifier: 8
+  strengthModifier: 3

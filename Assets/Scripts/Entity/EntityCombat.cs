@@ -20,7 +20,7 @@ public class EntityCombat : MonoBehaviour {
         int damage = stats.damage.GetValue();
         int strength = stats.strength.GetValue();
 
-
+        totalDamage = damage + Mathf.RoundToInt(strength * Random.Range(0f, 2f));
 
         target.Damage(totalDamage);
 

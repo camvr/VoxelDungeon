@@ -17,9 +17,9 @@ public class EntityStats : MonoBehaviour {
 
     public virtual void Damage(int damage)
     {
-        damage -= Mathf.Clamp(defense.GetValue(), 0, int.MaxValue);
+        damage = Mathf.Clamp(damage - defense.GetValue(), 0, int.MaxValue);
 
-        currentHealth -= Mathf.Clamp(damage, 0, int.MaxValue);
+        currentHealth -= damage;
 
         MessageUI.instance.Log(entityName + " takes " + damage + " damage.", Color.white);
 

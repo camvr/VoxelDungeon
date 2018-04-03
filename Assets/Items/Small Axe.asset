@@ -18,3 +18,4 @@ MonoBehaviour:
   slot: 3
   defenseModifier: 0
   damageModifier: 4
+  strengthModifier: 2

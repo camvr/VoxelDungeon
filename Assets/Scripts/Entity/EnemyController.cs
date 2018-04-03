@@ -8,6 +8,9 @@ public class EnemyController : Interactable {
 
     public int viewRadius = 7;
     public bool isDead = false;
+    public List<GameObject> equipRefs;
+    public List<Equipment> equipmentDrops;
+    public List<Item> drops;
 
     private int maxMovementRetries = 8;
     private EnemyMovement movement;
@@ -16,13 +19,48 @@ public class EnemyController : Interactable {
     private PlayerController playerInstance;
     private Transform playerMemory = null;
 
-    private void Start()
+    private void Awake()
     {
         movement = GetComponent<EnemyMovement>();
         stats = GetComponent<EnemyStats>();
         combat = GetComponent<EntityCombat>();
+    }
+
+    private void Start()
+    {
         playerInstance = PlayerController.instance;
         GameManager.instance.AddEnemy(this);
+    }
+
+    public void RandomizeStats(int level)
+    {
+        // Randomize base stats
+        stats.maxHealth = Random.Range(10 + (level * 5), 10 + (level * 10));
+
+        stats.damage.InitValue(Random.Range(0, level), Random.Range(level + 1, ((level - 1) * 2) + 2));
+        stats.strength.InitValue(Random.Range(0, level), Random.Range(level + 1, ((level - 1) * 2) + 2));
+        stats.defense.InitValue(Random.Range(0, level), Random.Range(level + 1, ((level - 1) * 2) + 2));
+
+        float equipChance = Random.Range(0f, 1f);
+        for (int i = equipmentDrops.Count; i > 0; i--)
+        {
+            if (equipChance < (float)level / (float)(i + level + 2))
+            {
+                drops.Add(equipmentDrops[i - 1]);
+                foreach (GameObject equipRef in equipRefs)
+                {
+                    if (equipRef.GetComponent<ItemPickup>().item.Equals(equipmentDrops[i - 1]))
+                    {
+                        equipRef.SetActive(true);
+                        stats.SetModifiers(equipmentDrops[i - 1]);
+                        break;
+                    }
+                }
+                break;
+            }
+        }
+
+        stats.SetDrops(drops);
     }
 
     public override void Interact()
