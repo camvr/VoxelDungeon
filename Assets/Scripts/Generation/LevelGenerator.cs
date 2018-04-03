@@ -1,4 +1,4 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
@@ -19,8 +19,29 @@ public class LevelGenerator : MonoBehaviour
     private Corridor[] corridors;                           // An array of corridors for this level that are generated
     private GameObject dungeonTiles;                        // GameObject that acts as a container for the tiles in this level
 
+    private TileType[] _legalFloorTiles = { TileType.Floor, TileType.Exit };
+    private int level;
 
-	public TileType[][] Generate () {
+    private void Start()
+    {
+        level = LevelManager.instance.GetLevel() - 1;
+        columns += 10 * level;
+        rows += 10 * level;
+
+        numRooms.m_Min += level * Random.Range(1, 4);
+        numRooms.m_Max += level * Random.Range(1, 4);
+
+        roomWidth.m_Min += level * Random.Range(1, 4);
+        roomWidth.m_Max += level * Random.Range(1, 4);
+
+        roomHeight.m_Min += level * Random.Range(1, 4);
+        roomHeight.m_Max += level * Random.Range(1, 4);
+
+        corridorLength.m_Min += level * Random.Range(1, 5);
+        corridorLength.m_Max += level * Random.Range(1, 5);
+    }
+
+    public TileType[][] Generate () {
         dungeonTiles = new GameObject("DungeonTiles");
 
         SetupTilesArray();
@@ -29,18 +50,60 @@ public class LevelGenerator : MonoBehaviour
 
         SetTilesValuesForRooms();
         SetTilesValuesForCorridors();
+        PlaceDungeonFeatures();
         SetWallPositions();
-        //PlaceDungeonFeatures();
 
         InstantiateTiles();
 
         return tiles;
     }
+
+    public Vector3 GetPlayerStartPos()
+    {
+        Vector3 pos = new Vector2();
+
+        int rightmost = 0;
+        int minNum = columns + rows;
+
+        // find furthest room from exit >:D
+        for (int i = 0; i < rooms.Length; i++)
+        {
+            if (rooms[i].xPos + rooms[i].zPos < minNum)
+            {
+                minNum = rooms[i].xPos + rooms[i].zPos;
+                rightmost = i;
+            }
+        }
+        
+        pos.x = rooms[rightmost].xPos + Random.Range(0, rooms[rightmost].roomWidth) + 1;
+        pos.y = 0.5f;
+        pos.z = rooms[rightmost].zPos + Random.Range(0, rooms[rightmost].roomHeight) + 1;
+
+        return pos;
+    }
+
+    public List<Vector3> GetEnemyDistributedPositions()
+    {
+        List<Vector3> positions = new List<Vector3>();
+
+        for (int i = 0; i < rooms.Length; i++)
+        {
+            if (Random.Range(0f, 1f) >= 0.1)
+            {
+                Vector3 newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+                while (positions.Contains(newPos))
+                    newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+                positions.Add(newPos);
+            }
+        }
+
+        return positions;
+    }
 	
     /**
      * Initializes the tiles array for the generation algorithm to store tile types in.
      */
-	void SetupTilesArray()
+	private void SetupTilesArray()
     {
         tiles = new TileType[columns + 2][];
 
@@ -53,7 +116,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    void CreateRoomsAndCorridors()
+    private void CreateRoomsAndCorridors()
     {
         // Initialize the number of rooms and corresponding corridors
         rooms = new Room[numRooms.Random];
@@ -82,7 +145,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    void SetTilesValuesForRooms()
+    private void SetTilesValuesForRooms()
     {
         for (int i = 0; i < rooms.Length; i++)
         {
@@ -104,7 +167,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    void SetTilesValuesForCorridors()
+    private void SetTilesValuesForCorridors()
     {
         for (int i = 0; i < corridors.Length; i++)
         {
@@ -138,7 +201,7 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
-    void SetWallPositions()
+    private void SetWallPositions()
     {
         for (int i = 0; i < tiles.Length; i++)
         {
@@ -146,21 +209,52 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (tiles[i][j] == TileType.Empty)
                 {
-                    if ((i > 0 && tiles[i - 1][j] == TileType.Floor) ||
-                        (i < tiles.Length - 1 && tiles[i + 1][j] == TileType.Floor) ||
-                        (j > 0 && tiles[i][j - 1] == TileType.Floor) ||
-                        (j < tiles[i].Length - 1 && tiles[i][j + 1] == TileType.Floor))
+                    if ((i > 0 && IsFloorTile(i - 1, j)) ||
+                        (i < tiles.Length - 1 && IsFloorTile(i + 1, j)) ||
+                        (j > 0 && IsFloorTile(i, j - 1)) ||
+                        (j < tiles[i].Length - 1 && IsFloorTile(i, j + 1)))
                     {
                         tiles[i][j] = TileType.Wall;
+                        // perhaps seed in torches here?
                     }
                 }
             }
         }
     }
 
-    void PlaceDungeonFeatures()
+    private bool IsFloorTile(int x, int z)
     {
-        for (int i = 0; i < tiles.Length; i++)
+        foreach (TileType tile in _legalFloorTiles)
+        {
+            if (tiles[x][z] == tile)
+                return true;
+        }
+        return false;
+    }
+
+    private void PlaceDungeonFeatures()
+    {
+        /* Place level exit */
+        int leftmost = 0;
+        int maxNum = 0;
+
+        // find furthest room
+        for (int i = 0; i < rooms.Length; i++)
+        {
+            if (rooms[i].xPos + rooms[i].zPos > maxNum)
+            {
+                maxNum = rooms[i].xPos + rooms[i].zPos;
+                leftmost = i;
+            }
+        }
+
+        // place exit in its approximate center
+        int exitX = rooms[leftmost].xPos + Mathf.FloorToInt(rooms[leftmost].roomWidth / 2f);
+        int exitZ = rooms[leftmost].zPos + Mathf.FloorToInt(rooms[leftmost].roomHeight / 2f);
+        tiles[exitX][exitZ] = TileType.Exit;
+
+
+        /*for (int i = 0; i < tiles.Length; i++)
         {
             for (int j = 0; j < tiles[i].Length; j++)
             {
@@ -169,10 +263,10 @@ public class LevelGenerator : MonoBehaviour
                     tiles[i][j] = TileType.WallTorch;
                 }
             }
-        }
+        }*/
     }
 
-    void InstantiateTiles()
+    private void InstantiateTiles()
     {
         // Loop through all tiles in the tiles array
         for (int i = 0; i < tiles.Length; i++)
@@ -189,15 +283,17 @@ public class LevelGenerator : MonoBehaviour
                         InstantiateTile(wallTiles, i, 1.5f, j, 0, ((i + j) % 2)*90, 0);
                         break;
                     case TileType.WallTorch:
-                        float facingAngle = 0f;
-                        InstantiateTile(wallTorch, i, 1.5f, j, 0, facingAngle, 0);
+                        InstantiateTile(wallTorch, i, 1.5f, j, 0, 0f, 0);
+                        break;
+                    case TileType.Exit:
+                        InstantiateTile(endTile, i, 0, j, 0, Random.Range(0, 4) * 90f, 0);
                         break;
                 }
             }
         }
     }
 
-    void InstantiateTile(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    private void InstantiateTile(GameObject[] prefabs, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // Create a random index for the array.
         int randomIndex = Random.Range(0, prefabs.Length);
@@ -218,7 +314,7 @@ public class LevelGenerator : MonoBehaviour
         tileInstance.transform.parent = dungeonTiles.transform;
     }
 
-    void InstantiateTile(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
+    private void InstantiateTile(GameObject prefab, float xCoord, float yCoord, float zCoord, float xRot = 0, float yRot = 0, float zRot = 0)
     {
         // The position to be instantiated at is based on the coordinates.
         Vector3 position = new Vector3(xCoord, yCoord, zCoord);
@@ -236,7 +332,7 @@ public class LevelGenerator : MonoBehaviour
         tileInstance.transform.parent = dungeonTiles.transform;
     }
 
-    int NumSurroundingTiles(int x, int y, TileType tile)
+    private int NumSurroundingTiles(int x, int y, TileType tile)
     {
         int num = 0;
 

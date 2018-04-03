@@ -3,14 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 
-public class PlayerController : MonoBehaviour {
-
+public class PlayerController : MonoBehaviour
+{
     public GameObject player;
     public int viewRadius = 5;
+
+    public float healthRegenChance = 0.3f;
 
     public GameObject[] weapons;
 
     private PlayerMovement movement;
+    private PlayerStats stats;
 
     #region Singleton
     public static PlayerController instance;
@@ -25,6 +28,7 @@ public class PlayerController : MonoBehaviour {
 
         instance = this;
         movement = player.GetComponent<PlayerMovement>();
+        stats = player.GetComponent<PlayerStats>();
     }
     #endregion
 
@@ -87,6 +91,12 @@ public class PlayerController : MonoBehaviour {
             else if (hit.transform.tag == "Wall")
             {
                 MessageUI.instance.Log("There's a wall in the way!", Color.white);
+            }
+
+            // Regen health randomly
+            if (Random.Range(0f, 1f) <= healthRegenChance)
+            {
+                stats.RegenHealth(1, 2);
             }
 
             GameManager.instance.playersTurn = false;

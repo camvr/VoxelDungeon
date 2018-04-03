@@ -7,7 +7,7 @@ public enum TileType
     Wall,
     WallTorch,
     Floor,
-    exit,
+    Exit,
     Empty,
     Item,
 }
@@ -63,19 +63,22 @@ public class BoardManager : MonoBehaviour {
         /* Place entities */
 
         // Place the player
-        Vector3 startPos = GetLegalPosition();
-        PlayerController.instance.transform.position = startPos; // TODO: set to entry point
+        Vector3 startPos = levelGenerator.GetPlayerStartPos();
+        PlayerController.instance.transform.position = startPos;
         SetAvailableTile((int)startPos.x, (int)startPos.z, false);
 
         // Place enemies
-        int numEnemies = Random.Range(minEnemies, maxEnemies);
-        for (int i = 0; i < numEnemies; i++)
+        //int numEnemies = Random.Range(minEnemies, maxEnemies);
+        List<Vector3> enemyPositions = levelGenerator.GetEnemyDistributedPositions();
+        foreach (Vector3 enemyPos in enemyPositions)
         {
-            Vector3 enemyPos = GetLegalPosition();
+            SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
             GameObject enemyInstance = Instantiate(enemyPrefab, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
             enemyInstance.transform.parent = enemyObjects.transform;
+
+            // Set enemy instance's stats
             enemyInstance.GetComponent<EnemyStats>().maxHealth = Random.Range(20, 40);
-            SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
+            
         }
     }
 
@@ -97,6 +100,11 @@ public class BoardManager : MonoBehaviour {
     {
         TileType tile = board[x][z];
         return (tile == TileType.Floor || tile == TileType.Item) && availableTiles[x][z];
+    }
+
+    public bool IsExitTile(int x, int z)
+    {
+        return board[x][z] == TileType.Exit;
     }
 
     public void SetAvailableTile(int x, int z, bool available)

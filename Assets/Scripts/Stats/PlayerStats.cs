@@ -9,6 +9,7 @@ public class PlayerStats : EntityStats {
     private void Start()
     {
         EquipmentManager.instance.onEquipmentChangedCallback += OnEquipmentChanged;
+        UpdateUI();
     }
 
     void OnEquipmentChanged(Equipment newItem, Equipment oldItem)
@@ -17,12 +18,14 @@ public class PlayerStats : EntityStats {
         {
             defense.AddModifier(newItem.defenseModifier);
             damage.AddModifier(newItem.damageModifier);
+            strength.AddModifier(newItem.strengthModifier);
         }
 
         if (oldItem != null)
         {
             defense.RemoveModifier(oldItem.defenseModifier);
             damage.RemoveModifier(oldItem.damageModifier);
+            strength.RemoveModifier(newItem.strengthModifier);
         }
     }
 
@@ -35,8 +38,7 @@ public class PlayerStats : EntityStats {
 
         MessageUI.instance.Log(entityName + " takes " + damage + " damage.", damage == 0 ? new Color(0.8f, 0.8f, 0.8f) : Color.red);
 
-        healthText.text = Mathf.Clamp(currentHealth, 0, maxHealth).ToString();
-        healthBar.fillAmount = Mathf.Clamp((float)currentHealth / (float)maxHealth, 0.0f, 1.0f);
+        UpdateUI();
 
         if (currentHealth <= 0)
         {
@@ -44,10 +46,22 @@ public class PlayerStats : EntityStats {
         }
     }
 
+    public void RegenHealth(int min, int max)
+    {
+        currentHealth = Mathf.Clamp(currentHealth + Random.Range(min, max + 1), 0, maxHealth);
+        UpdateUI();
+    }
+
     public override void Die()
     {
         base.Die();
         MessageUI.instance.Log("You died.", new Color(0.7f, 0.0f, 0.0f));
         PlayerController.instance.KillPlayer(); // game over!
+    }
+
+    private void UpdateUI()
+    {
+        healthText.text = Mathf.Clamp(currentHealth, 0, maxHealth).ToString();
+        healthBar.fillAmount = Mathf.Clamp((float)currentHealth / (float)maxHealth, 0.0f, 1.0f);
     }
 }

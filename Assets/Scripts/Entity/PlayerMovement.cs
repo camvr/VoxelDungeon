@@ -10,6 +10,8 @@ public class PlayerMovement : MonoBehaviour {
     private BoxCollider boxCollider;
     private float inverseMoveSpeed;
 
+    private bool isEndOfLevel = false;
+
     void Start ()
     {
         anim = GetComponent<Animator>();
@@ -34,6 +36,13 @@ public class PlayerMovement : MonoBehaviour {
 
                 boxCollider.center += new Vector3(dir.x, 0, dir.y);
                 playerMovement = StartCoroutine(SmoothMove(dest));
+                return true;
+            } else if (BoardManager.instance.IsExitTile((int)dest.x, (int)dest.z))
+            {
+                boxCollider.center += new Vector3(dir.x, 0, dir.y);
+                isEndOfLevel = true;
+                playerMovement = StartCoroutine(SmoothMove(dest));
+                GameManager.instance.LevelComplete();
                 return true;
             }
         }
@@ -68,6 +77,26 @@ public class PlayerMovement : MonoBehaviour {
         anim.CrossFade("IdleState", animFade);
         anim.SetBool("isWalking", false);
         anim.SetBool("isIdle", true);
+
+        // animate climbing down the ladder
+        if (isEndOfLevel)
+        {
+            inverseMoveSpeed = 0.5f;
+            start = transform.position;
+            dest = transform.position;
+            dest.y -= 2;
+            t = 0.0f;
+            
+            while (t < 1.0f)
+            {
+                transform.position = Vector3.Lerp(start, dest, t);
+
+                t += Time.deltaTime * inverseMoveSpeed;
+                yield return null;
+            }
+
+            transform.position = dest;
+        }
 
         playerMovement = null;
     }

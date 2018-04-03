@@ -7,6 +7,7 @@ public class EntityStats : MonoBehaviour {
     public int currentHealth;
 
     public Stat damage;
+    public Stat strength;
     public Stat defense;
 
     private void Awake()

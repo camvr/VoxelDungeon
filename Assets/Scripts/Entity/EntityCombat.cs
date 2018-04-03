@@ -16,7 +16,13 @@ public class EntityCombat : MonoBehaviour {
 
     public void Attack(EntityStats target)
     {
-        target.Damage(stats.damage.GetValue()); // TODO: may need tweaking
+        int totalDamage = 0;
+        int damage = stats.damage.GetValue();
+        int strength = stats.strength.GetValue();
+
+
+
+        target.Damage(totalDamage);
 
         if (OnAttack != null)
             OnAttack();

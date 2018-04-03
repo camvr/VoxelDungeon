@@ -6,6 +6,7 @@ public class Equipment : Item {
 
     public int defenseModifier;
     public int damageModifier;
+    public int strengthModifier;
 
     public override void Use()
     {
