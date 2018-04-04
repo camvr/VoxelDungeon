@@ -929,7 +929,7 @@ Light:
   serializedVersion: 8
   m_Type: 2
   m_Color: {r: 0.8897059, g: 0.6714954, b: 0.37289143, a: 1}
-  m_Intensity: 1.63
+  m_Intensity: 4
   m_Range: 10
   m_SpotAngle: 30
   m_CookieSize: 10
@@ -1011,6 +1011,9 @@ MonoBehaviour:
   damage:
     minValue: 0
     maxValue: 5
+  strength:
+    minValue: 0
+    maxValue: 0
   defense:
     minValue: 0
     maxValue: 0

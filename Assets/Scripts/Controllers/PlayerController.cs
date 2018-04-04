@@ -121,4 +121,9 @@ public class PlayerController : MonoBehaviour
         // end the game
         GameManager.instance.EndGame();
     }
+
+    public PlayerStats GetStats()
+    {
+        return stats;
+    }
 }

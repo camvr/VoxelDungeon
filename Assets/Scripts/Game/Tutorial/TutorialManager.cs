@@ -31,14 +31,17 @@ public class TutorialManager : MonoBehaviour {
     public List<Text> progress;
     public Item droppedWeapon;
     public GameObject enemy;
+    public GameObject objectiveLight;
 
     [HideInInspector] public TutorialState state { get; private set; }
     private Color currentColor = new Color(0.184f, 0.184f, 0.184f);
     private Color completedColor = new Color(0f, 0.69f, 0.035f);
+    private GameObject exitLadder;
     
 	private void Start()
     {
         state = TutorialState.MOVEMENT;
+        exitLadder = GameObject.Find("ladder(Clone)");
 	}
 
     private void NextChallenge()
@@ -57,13 +60,27 @@ public class TutorialManager : MonoBehaviour {
             switch (state)
             {
                 case TutorialState.PICKUP: // spawn object
-                    BoardManager.instance.DropItem(droppedWeapon, GetLegalPositionNearPlayer(2));
+                    Vector3 pos = GetLegalPositionNearPlayer(2);
+                    BoardManager.instance.DropItem(droppedWeapon, pos);
+                    objectiveLight.SetActive(true);
+                    objectiveLight.transform.position = new Vector3(pos.x, 3, pos.z);
+                    break;
+                case TutorialState.INVENTORY:
+                    objectiveLight.SetActive(false);
                     break;
                 case TutorialState.COMBAT: // spawn enemy
                     Vector3 enemyPos = GetLegalPositionNearPlayer(4);
                     BoardManager.instance.SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
                     GameObject enemyInstance = Instantiate(enemy, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
                     enemyInstance.GetComponent<EnemyStats>().SetDrops(new List<Item>());
+
+                    objectiveLight.SetActive(true);
+                    objectiveLight.transform.parent = enemyInstance.transform;
+                    objectiveLight.transform.localPosition = new Vector3(0, 3, 0);
+                    break;
+                case TutorialState.EXIT:
+                    objectiveLight.transform.parent = null;
+                    objectiveLight.transform.localPosition = new Vector3(exitLadder.transform.position.x, 3, exitLadder.transform.position.z);
                     break;
             }
         }

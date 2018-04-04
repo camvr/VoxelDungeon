@@ -7,6 +7,8 @@ public class CameraController : MonoBehaviour {
     public float scrollSpeed = 2.0f;
     public float maxZoom = 4f;
     public LayerMask fadeMask;
+    public float wallFadeMin = 0.1f;
+    public float wallFadeTime = 0.5f;
 
     private Transform target;
     private Vector3 zoomOffset;
@@ -43,7 +45,7 @@ public class CameraController : MonoBehaviour {
             if (!hiddenWalls.Contains(hits[i].transform))
             {
                 hiddenWalls.Add(hits[i].transform);
-                StartCoroutine(FadeWall(hits[i].transform, 0.0f, 0.5f));
+                StartCoroutine(FadeWall(hits[i].transform, wallFadeMin, wallFadeTime));
             }
         }
 
@@ -62,7 +64,7 @@ public class CameraController : MonoBehaviour {
             if (!isHit)
             {
                 Transform currWall = hiddenWalls[i];
-                StartCoroutine(FadeWall(currWall, 1f, 0.5f));
+                StartCoroutine(FadeWall(currWall, 1f, wallFadeTime));
                 hiddenWalls.RemoveAt(i);
                 i--;
             }

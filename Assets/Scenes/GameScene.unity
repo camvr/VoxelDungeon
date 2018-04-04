@@ -16,8 +16,8 @@ RenderSettings:
   serializedVersion: 8
   m_Fog: 1
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
-  m_FogMode: 3
-  m_FogDensity: 0.01
+  m_FogMode: 2
+  m_FogDensity: 0.3
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -1873,6 +1873,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3f733e57ce0f4468f39510de5c236c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startTutorial: 0
 --- !u!1 &640413015
 GameObject:
   m_ObjectHideFlags: 0
@@ -2039,6 +2040,7 @@ GameObject:
   - component: {fileID: 693210452}
   - component: {fileID: 693210456}
   - component: {fileID: 693210457}
+  - component: {fileID: 693210458}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -2152,6 +2154,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   equipmentParent: {fileID: 210342408}
+--- !u!114 &693210458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 693210451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8208d63798dcb1a4e9e7ba62f3f9efe4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  attackStat: {fileID: 50924924}
+  strengthStat: {fileID: 1887908907}
+  defenseStat: {fileID: 1325364741}
 --- !u!1 &712484253
 GameObject:
   m_ObjectHideFlags: 0
@@ -4479,6 +4495,8 @@ MonoBehaviour:
   - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
   wallTorch: {fileID: 170480, guid: 9ce968cea5901a94b85559bae8987bec, type: 2}
   endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
+  fillVoid: 1
+  voidTile: {fileID: 1874576652213684, guid: ffe55f81c590c184db985e328056fa2e, type: 2}
 --- !u!114 &1558163041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4844,6 +4862,7 @@ MonoBehaviour:
   gameOver: 0
   turnDelay: 0.3
   startDelay: 2
+  isTutorial: 0
 --- !u!4 &1661872042
 Transform:
   m_ObjectHideFlags: 0
@@ -5035,6 +5054,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3f733e57ce0f4468f39510de5c236c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startTutorial: 0
 --- !u!1 &1797396369
 GameObject:
   m_ObjectHideFlags: 0
@@ -5134,6 +5154,8 @@ MonoBehaviour:
   fadeMask:
     serializedVersion: 2
     m_Bits: 256
+  wallFadeMin: 0.1
+  wallFadeTime: 0.5
 --- !u!1001 &1843564190
 Prefab:
   m_ObjectHideFlags: 0

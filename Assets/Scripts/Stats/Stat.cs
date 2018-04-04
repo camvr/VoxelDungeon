@@ -36,4 +36,16 @@ public class Stat {
         if (modifier != 0)
             modifiers.Remove(modifier);
     }
+
+    public int GetBase()
+    {
+        return maxValue;
+    }
+
+    public int GetModifier()
+    {
+        int mod = 0;
+        modifiers.ForEach(x => mod += x);
+        return mod;
+    }
 }

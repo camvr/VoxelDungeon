@@ -100,7 +100,7 @@ public class BoardManager : MonoBehaviour {
 
     public bool IsLegalPos(int x, int z)
     {
-        if (x >= board.Length || z >= board[0].Length) return false;
+        if (x >= board.Length || z >= board[0].Length || x < 0 || z < 0) return false;
 
         TileType tile = board[x][z];
         return (tile == TileType.Floor || tile == TileType.Item) && availableTiles[x][z];
