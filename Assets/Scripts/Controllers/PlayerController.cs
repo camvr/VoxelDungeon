@@ -95,9 +95,13 @@ public class PlayerController : MonoBehaviour
 
                 hit.transform.GetComponent<EnemyController>().Interact();
             }
-            else if (hit.transform.tag == "Wall")
+            else if (hit.transform.name.Contains("fbBrickWall"))
             {
                 MessageUI.instance.Log("There's a wall in the way!", Color.white);
+            }
+            else if (hit.transform.name.Contains("fbBrickVase"))
+            {
+                MessageUI.instance.Log("There's a vase in the way!", Color.white);
             }
 
             // Regen health randomly

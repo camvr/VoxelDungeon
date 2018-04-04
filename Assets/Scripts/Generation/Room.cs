@@ -15,10 +15,9 @@ public class Room
         roomHeight = heightRange.Random;
 
         // Set the x and z coordinates to place the room roughly in the center of the board
-        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f);
-        zPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f);
+        xPos = Mathf.RoundToInt(columns / 2f - roomWidth / 2f) + 1;
+        zPos = Mathf.RoundToInt(rows / 2f - roomHeight / 2f) + 1;
     }
-
 
     public void setupRoom(RandInt widthRange, RandInt heightRange, int columns, int rows, Corridor corridor)
     {
@@ -59,5 +58,13 @@ public class Room
                 zPos = Mathf.Clamp(zPos, 0, rows - roomHeight);
                 break;
         }
+
+        xPos += 1;
+        zPos += 1;
+    }
+
+    public Vector2 GetNonBlockingPosition()
+    {
+        return new Vector2(xPos + Random.Range(1, roomWidth - 1), zPos + Random.Range(1, roomHeight - 1));
     }
 }

@@ -16,8 +16,8 @@ RenderSettings:
   serializedVersion: 8
   m_Fog: 1
   m_FogColor: {r: 0, g: 0, b: 0, a: 1}
-  m_FogMode: 2
-  m_FogDensity: 0.3
+  m_FogMode: 3
+  m_FogDensity: 0.25
   m_LinearFogStart: 0
   m_LinearFogEnd: 300
   m_AmbientSkyColor: {r: 0, g: 0, b: 0, a: 1}
@@ -4493,7 +4493,9 @@ MonoBehaviour:
   - {fileID: 194322, guid: 9ba882aed9dc21047bca2bbebafc7e79, type: 2}
   wallTiles:
   - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
-  wallTorch: {fileID: 170480, guid: 9ce968cea5901a94b85559bae8987bec, type: 2}
+  miscObjects:
+  - {fileID: 155830, guid: 8c228815df9a3394299f70ece2567e65, type: 2}
+  wallTorch: {fileID: 1718696137769292, guid: 9c80053b237799b478e7fa9e33667a8b, type: 2}
   endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
   fillVoid: 1
   voidTile: {fileID: 1874576652213684, guid: ffe55f81c590c184db985e328056fa2e, type: 2}

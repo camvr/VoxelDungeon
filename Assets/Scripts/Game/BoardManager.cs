@@ -10,6 +10,7 @@ public enum TileType
     Exit,
     Empty,
     Item,
+    Misc,
 }
 
 public class BoardManager : MonoBehaviour {
@@ -100,7 +101,7 @@ public class BoardManager : MonoBehaviour {
 
     public bool IsLegalPos(int x, int z)
     {
-        if (x >= board.Length || z >= board[0].Length || x < 0 || z < 0) return false;
+        if (x < 0 || x >= board.Length || z < 0 || z >= board[0].Length) return false;
 
         TileType tile = board[x][z];
         return (tile == TileType.Floor || tile == TileType.Item) && availableTiles[x][z];
@@ -108,12 +109,14 @@ public class BoardManager : MonoBehaviour {
 
     public bool IsExitTile(int x, int z)
     {
+        if (x < 0 || x >= board.Length || z < 0 || z >= board[0].Length) return false;
         return board[x][z] == TileType.Exit;
     }
 
     public void SetAvailableTile(int x, int z, bool available)
     {
-        availableTiles[x][z] = available;
+        if (x >= 0 || x < availableTiles.Length || z >= 0 || z < availableTiles[0].Length)
+            availableTiles[x][z] = available;
     }
 
     public void DropItem(Item item, Vector3 position)
