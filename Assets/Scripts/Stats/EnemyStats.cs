@@ -26,7 +26,10 @@ public class EnemyStats : EntityStats {
         MessageUI.instance.Log(entityName + " died.", new Color(0.8f, 0.8f, 0.8f));
         // show death animation
         
-        if (Random.Range(0f, 1f) < dropChance) // loot drops and player XP?
+        if (drops.Count > 0 && Random.Range(0f, 1f) < dropChance) // loot drops and player XP?
             BoardManager.instance.DropItem(drops[Random.Range(0, drops.Count - 1)], transform.position);
+
+        if (GameManager.instance.isTutorial)
+            TutorialManager.instance.ChallengeTrigger(TutorialState.COMBAT);
     }
 }

@@ -32,7 +32,7 @@ public class EnemyController : Interactable {
         GameManager.instance.AddEnemy(this);
     }
 
-    public void RandomizeStats(int level)
+    public void RandomizeStats(int level) // TODO: Could use some tweaking
     {
         // Randomize base stats
         stats.maxHealth = Random.Range(10 + (level * 5), 10 + (level * 10));
@@ -44,7 +44,7 @@ public class EnemyController : Interactable {
         float equipChance = Random.Range(0f, 1f);
         for (int i = equipmentDrops.Count; i > 0; i--)
         {
-            if (equipChance < (float)level / (float)(i + level + 2))
+            if (equipChance < (float)level / (float)(i + (level * 3)))
             {
                 drops.Add(equipmentDrops[i - 1]);
                 foreach (GameObject equipRef in equipRefs)

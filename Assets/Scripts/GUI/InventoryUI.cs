@@ -23,6 +23,9 @@ public class InventoryUI : MonoBehaviour {
 		if (Input.GetButtonDown("Inventory"))
         {
             inventoryUI.SetActive(!inventoryUI.activeSelf);
+
+            if (GameManager.instance.isTutorial && !inventoryUI.activeSelf)
+                TutorialManager.instance.ChallengeTrigger(TutorialState.INVENTORY);
         }
 	}
 

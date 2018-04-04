@@ -68,6 +68,10 @@ public class PlayerController : MonoBehaviour
                 {
                     currItem.Interact(); // interact with first item in list
                     GameManager.instance.playersTurn = false;
+
+                    if (GameManager.instance.isTutorial)
+                        TutorialManager.instance.ChallengeTrigger(TutorialState.PICKUP);
+
                     return;
                 }
             }
@@ -76,6 +80,9 @@ public class PlayerController : MonoBehaviour
         // Check for legal move, give relevant actions
         if (move != new Vector2(0, 0))
         {
+            if (GameManager.instance.isTutorial)
+                TutorialManager.instance.ChallengeTrigger(TutorialState.MOVEMENT);
+
             Vector3 dest = transform.position + new Vector3(move.x, 0, move.y);
             RaycastHit hit;
             if (!Physics.Linecast(transform.position, dest, out hit))

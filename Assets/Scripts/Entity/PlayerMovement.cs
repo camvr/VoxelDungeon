@@ -39,6 +39,8 @@ public class PlayerMovement : MonoBehaviour {
                 return true;
             } else if (BoardManager.instance.IsExitTile((int)dest.x, (int)dest.z))
             {
+                if (GameManager.instance.isTutorial && TutorialManager.instance.state != TutorialState.EXIT) return false;
+
                 boxCollider.center += new Vector3(dir.x, 0, dir.y);
                 isEndOfLevel = true;
                 playerMovement = StartCoroutine(SmoothMove(dest));

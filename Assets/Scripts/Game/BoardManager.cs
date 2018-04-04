@@ -69,15 +69,18 @@ public class BoardManager : MonoBehaviour {
 
         // Place enemies
         //int numEnemies = Random.Range(minEnemies, maxEnemies);
-        List<Vector3> enemyPositions = levelGenerator.GetEnemyDistributedPositions();
-        foreach (Vector3 enemyPos in enemyPositions)
+        if (!GameManager.instance.isTutorial)
         {
-            SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
-            GameObject enemyInstance = Instantiate(enemyPrefab, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
-            enemyInstance.transform.parent = enemyObjects.transform;
+            List<Vector3> enemyPositions = levelGenerator.GetEnemyDistributedPositions();
+            foreach (Vector3 enemyPos in enemyPositions)
+            {
+                SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
+                GameObject enemyInstance = Instantiate(enemyPrefab, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
+                enemyInstance.transform.parent = enemyObjects.transform;
 
-            // Set enemy instance's stats
-            enemyInstance.GetComponent<EnemyController>().RandomizeStats(LevelManager.instance.GetLevel());
+                // Set enemy instance's stats
+                enemyInstance.GetComponent<EnemyController>().RandomizeStats(LevelManager.instance.GetLevel());
+            }
         }
     }
 
@@ -97,6 +100,8 @@ public class BoardManager : MonoBehaviour {
 
     public bool IsLegalPos(int x, int z)
     {
+        if (x >= board.Length || z >= board[0].Length) return false;
+
         TileType tile = board[x][z];
         return (tile == TileType.Floor || tile == TileType.Item) && availableTiles[x][z];
     }

@@ -24,7 +24,10 @@ public class LevelGenerator : MonoBehaviour
 
     private void Start()
     {
-        level = LevelManager.instance.GetLevel() - 1;
+        if (GameManager.instance.isTutorial)
+            level = 1;
+        else
+            level = LevelManager.instance.GetLevel() - 1;
         columns += 10 * level;
         rows += 10 * level;
 

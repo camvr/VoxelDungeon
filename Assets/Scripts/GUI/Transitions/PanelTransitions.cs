@@ -3,6 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class PanelTransitions : MonoBehaviour
 {
+    public bool startTutorial = false;
+
     public void DisableSelf()
     {
         transform.gameObject.SetActive(false);
@@ -10,11 +12,17 @@ public class PanelTransitions : MonoBehaviour
 
     public void InvokeNextLevel()
     {
-        LevelManager.instance.NextLevel();
+        if (GameManager.instance.isTutorial)
+            SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+        else
+            LevelManager.instance.NextLevel();
     }
 
     public void InvokeGameStart()
     {
-        SceneManager.LoadScene("GameScene", LoadSceneMode.Single); // TODO: should load to tutorial
+        if (startTutorial)
+            SceneManager.LoadScene("Tutorial", LoadSceneMode.Single);
+        else
+            SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
 }

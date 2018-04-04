@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public List<Transform> items { get; private set; }
     public float turnDelay = 0.25f;
     public float startDelay = 2f;
+    public bool isTutorial = false;
     
     private List<EnemyController> enemies;
     private bool enemiesMoving = false;
@@ -53,7 +54,8 @@ public class GameManager : MonoBehaviour
         levelCompleteUI = GameObject.Find("LevelCompletePanel");
         floorNumberText = GameObject.Find("FloorNumberText");
 
-        floorNumberText.GetComponent<Text>().text = "Floor " + LevelManager.instance.GetLevel();
+        if (!isTutorial)
+            floorNumberText.GetComponent<Text>().text = "Floor " + LevelManager.instance.GetLevel();
         gameOverUI.SetActive(false);
         levelCompleteUI.SetActive(false);
 
@@ -70,7 +72,8 @@ public class GameManager : MonoBehaviour
         BoardManager.instance.Setup();
 
         // Load state from previous level if applicable
-        LevelManager.instance.LoadState();
+        if (!isTutorial)
+            LevelManager.instance.LoadState();
 
         doingSetup = false;
         playersTurn = true;
