@@ -9,14 +9,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e4cbc0ca6132ac4e92e4c5b3565c275, type: 3}
-  m_Name: Small Axe
+  m_Name: Small Shield
   m_EditorClassIdentifier: 
-  name: Small Axe
-  icon: {fileID: 21300000, guid: fdb1ea6aa1dd51d4688351928008afe9, type: 3}
-  prefab: {fileID: 0}
+  name: Small Shield
+  icon: {fileID: 21300000, guid: f258755aa3699ea4b83e13609e9eaa33, type: 3}
+  prefab: {fileID: 1322855430012054, guid: b6c1f99f662c0804cbaf66826a01b3f2, type: 2}
   isDefaultItem: 0
-  dropChance: 0.25
-  slot: 3
-  defenseModifier: 0
-  damageModifier: 4
-  strengthModifier: 2
+  dropChance: 0.2
+  slot: 4
+  defenseModifier: 4
+  damageModifier: 1
+  strengthModifier: 1

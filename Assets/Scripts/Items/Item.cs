@@ -7,6 +7,7 @@ public class Item : ScriptableObject {
     public Sprite icon = null;
     public GameObject prefab;
     public bool isDefaultItem = false;
+    public float dropChance;
 
     public virtual void Use()
     {

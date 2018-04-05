@@ -15,6 +15,7 @@ MonoBehaviour:
   icon: {fileID: 21300000, guid: e5420bbbbf883bf40abc61b07982ae28, type: 3}
   prefab: {fileID: 1562462291767744, guid: aad820782b3c76b44beb41775e323759, type: 2}
   isDefaultItem: 0
+  dropChance: 0.01
   slot: 3
   defenseModifier: 3
   damageModifier: 8
