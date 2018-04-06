@@ -7,6 +7,7 @@ public class EquipmentUI : MonoBehaviour {
     private EquipmentSlot[] slots;
 
     private EquipmentManager equipment;
+    private ContextMenu contextMenu;
 
     // Use this for initialization
     void Start()

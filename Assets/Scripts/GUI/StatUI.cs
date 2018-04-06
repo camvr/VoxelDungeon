@@ -13,6 +13,7 @@ public class StatUI : MonoBehaviour {
     {
         stats = PlayerController.instance.GetStats();
         EquipmentManager.instance.onEquipmentChangedCallback += OnEquipmentChanged;
+        ContextMenu.instance.onUpdateUICallback += UpdateUI;
         UpdateUI();
     }
 

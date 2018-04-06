@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class EquipmentManager : MonoBehaviour {
 
-    public GameObject[] weapons;
     public delegate void OnEquipmentChanged(Equipment newItem, Equipment oldItem);
     public OnEquipmentChanged onEquipmentChangedCallback;
     
     private Equipment[] currentEquipment;
+    private GameObject[] weaponRefs;
+    private GameObject[] defenseRefs;
 
     #region Singleton
     [HideInInspector] public static EquipmentManager instance = null;
@@ -22,9 +23,12 @@ public class EquipmentManager : MonoBehaviour {
         }
 
         instance = this;
-        weapons = PlayerController.instance.weapons;
+
         int numSlots = System.Enum.GetNames(typeof(EquipmentType)).Length;
         currentEquipment = new Equipment[numSlots];
+
+        weaponRefs = PlayerController.instance.weaponRefs;
+        defenseRefs = PlayerController.instance.defenseRefs;
     }
     #endregion
 
@@ -50,11 +54,21 @@ public class EquipmentManager : MonoBehaviour {
         switch (newItem.slot)
         {
             case EquipmentType.Weapon:
-                foreach (GameObject weapon in weapons)
+                foreach (GameObject weapon in weaponRefs)
                 {
-                    if (weapon.GetComponent<ItemPickup>().item == newItem)
+                    if (weapon.name == newItem.name)
                     {
                         weapon.SetActive(true);
+                        break;
+                    }
+                }
+                break;
+            case EquipmentType.Shield:
+                foreach (GameObject defense in defenseRefs)
+                {
+                    if (defense.name == newItem.name)
+                    {
+                        defense.SetActive(true);
                         break;
                     }
                 }
@@ -77,9 +91,15 @@ public class EquipmentManager : MonoBehaviour {
             switch (equipSlot)
             {
                 case (int)EquipmentType.Weapon:
-                    foreach (GameObject weapon in weapons)
+                    foreach (GameObject weapon in weaponRefs)
                     {
                         weapon.SetActive(false);
+                    }
+                    break;
+                case (int)EquipmentType.Shield:
+                    foreach (GameObject defense in defenseRefs)
+                    {
+                        defense.SetActive(false);
                     }
                     break;
                 default:

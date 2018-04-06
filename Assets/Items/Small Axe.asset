@@ -13,10 +13,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   name: Small Axe
   icon: {fileID: 21300000, guid: fdb1ea6aa1dd51d4688351928008afe9, type: 3}
-  prefab: {fileID: 0}
+  prefab: {fileID: 1075210180127860, guid: 196eacfdb75555e428f8983a55c874a1, type: 2}
   isDefaultItem: 0
   dropChance: 0.25
   slot: 3
-  defenseModifier: 0
-  damageModifier: 4
-  strengthModifier: 2
+  defenseModifierBase:
+    m_Min: 0
+    m_Max: 1
+  defenseLevelModifier: 0
+  damageModifierBase:
+    m_Min: 1
+    m_Max: 4
+  damageLevelModifier: 1
+  strengthModifierBase:
+    m_Min: 2
+    m_Max: 4
+  strengthLevelModifier: 1

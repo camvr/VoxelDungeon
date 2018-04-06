@@ -43,17 +43,19 @@ public class EnemyController : Interactable {
 
         float equipChance;
         List<EquipmentType> equipped = new List<EquipmentType>();
+        List<Equipment> mustDrop = new List<Equipment>();
 
         foreach (Equipment equipmentDrop in equipmentDrops)
         {
             equipChance = Random.Range(0f, 1f);
             if (equipChance < (float)level * equipmentDrop.dropChance && !equipped.Contains(equipmentDrop.slot))
             {
-                drops.Add(equipmentDrop);
+                equipmentDrop.Initialize();
                 equipped.Add(equipmentDrop.slot);
+                mustDrop.Add(equipmentDrop);
                 foreach (GameObject equipRef in equipRefs)
                 {
-                    if (equipRef.GetComponent<ItemPickup>().item.Equals(equipmentDrop))
+                    if (equipRef.GetComponent<ItemPickup>().item.name == equipmentDrop.name)
                     {
                         equipRef.SetActive(true);
                         stats.SetModifiers(equipmentDrop);
@@ -63,7 +65,7 @@ public class EnemyController : Interactable {
             }
         }
 
-        stats.SetDrops(drops);
+        stats.SetDrops(drops, mustDrop);
     }
 
     public override void Interact()

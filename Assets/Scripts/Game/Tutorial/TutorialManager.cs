@@ -61,7 +61,7 @@ public class TutorialManager : MonoBehaviour {
             {
                 case TutorialState.PICKUP: // spawn object
                     Vector3 pos = GetLegalPositionNearPlayer(2);
-                    BoardManager.instance.DropItem(droppedWeapon, pos);
+                    BoardManager.instance.DropItem((Equipment)droppedWeapon, pos);
                     objectiveLight.SetActive(true);
                     objectiveLight.transform.position = new Vector3(pos.x, 3, pos.z);
                     break;
@@ -72,7 +72,7 @@ public class TutorialManager : MonoBehaviour {
                     Vector3 enemyPos = GetLegalPositionNearPlayer(4);
                     BoardManager.instance.SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
                     GameObject enemyInstance = Instantiate(enemy, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
-                    enemyInstance.GetComponent<EnemyStats>().SetDrops(new List<Item>());
+                    enemyInstance.GetComponent<EnemyStats>().SetDrops(new List<Item>(), new List<Equipment>());
 
                     objectiveLight.SetActive(true);
                     objectiveLight.transform.parent = enemyInstance.transform;

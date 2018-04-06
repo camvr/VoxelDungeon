@@ -16,7 +16,10 @@ public class GameManager : MonoBehaviour
     public float turnDelay = 0.25f;
     public float startDelay = 2f;
     public bool isTutorial = false;
-    
+
+    public delegate void OnTriggerWorldMoves();
+    public OnTriggerWorldMoves onTriggerWorldMovesCallback;
+
     private List<EnemyController> enemies;
     private bool enemiesMoving = false;
     private bool doingSetup = true;
@@ -148,6 +151,9 @@ public class GameManager : MonoBehaviour
                 enemy.ChooseAction();
             }
         }
+
+        if (onTriggerWorldMovesCallback != null)
+            onTriggerWorldMovesCallback.Invoke();
 
         yield return new WaitForSeconds(turnDelay);
 

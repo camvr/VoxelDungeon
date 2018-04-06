@@ -26,9 +26,8 @@ public class PlayerMovement : MonoBehaviour {
         {
             Vector3 dest = transform.position + new Vector3(dir.x, 0, dir.y);
             RotateToDir(dir);
-
-            RaycastHit ray;
-            if (!Physics.Raycast(transform.position, new Vector3(dir.x, 0, dir.y), out ray, 1f) && BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
+            
+            if (BoardManager.instance.IsLegalPos((int)dest.x, (int)dest.z))
             {
                 // mark new position as unavailable
                 BoardManager.instance.SetAvailableTile((int)transform.position.x, (int)transform.position.z, true);

@@ -6,6 +6,7 @@ public class InventoryUI : MonoBehaviour {
     public GameObject inventoryUI;
 
     private Inventory inventory;
+    private ContextMenu contextMenu;
 
     private InventorySlot[] slots;
 
@@ -16,17 +17,6 @@ public class InventoryUI : MonoBehaviour {
 
         slots = itemsParent.GetComponentsInChildren<InventorySlot>();
         UpdateUI(); // Update on start
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		if (Input.GetButtonDown("Inventory"))
-        {
-            inventoryUI.SetActive(!inventoryUI.activeSelf);
-
-            if (GameManager.instance.isTutorial && !inventoryUI.activeSelf)
-                TutorialManager.instance.ChallengeTrigger(TutorialState.INVENTORY);
-        }
 	}
 
     void UpdateUI()

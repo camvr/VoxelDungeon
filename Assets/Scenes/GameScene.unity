@@ -4274,11 +4274,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 606e540a9a6ba944ab2ac1d5cb075ad4, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1466500413 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1016932572139652, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 1883768950}
 --- !u!224 &1476174726 stripped
 RectTransform:
   m_PrefabParentObject: {fileID: 224045255245028754, guid: ee39d7100d492ea4fafdff5fa467eb5d,
@@ -4358,11 +4353,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1479552790}
---- !u!1 &1487336218 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1899425164614410, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 1883768950}
 --- !u!1 &1529870078
 GameObject:
   m_ObjectHideFlags: 0
@@ -4495,6 +4485,7 @@ MonoBehaviour:
   - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
   miscObjects:
   - {fileID: 155830, guid: 8c228815df9a3394299f70ece2567e65, type: 2}
+  trapTile: {fileID: 1783248384459062, guid: 31e7d18a1b58c0b47a243c63e4b7a397, type: 2}
   wallTorch: {fileID: 1718696137769292, guid: 9c80053b237799b478e7fa9e33667a8b, type: 2}
   endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
   fillVoid: 1
@@ -4797,11 +4788,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 606e540a9a6ba944ab2ac1d5cb075ad4, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &1628242416 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1743270670975890, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 1883768950}
 --- !u!1 &1661872036
 GameObject:
   m_ObjectHideFlags: 0
@@ -4813,6 +4799,7 @@ GameObject:
   - component: {fileID: 1661872041}
   - component: {fileID: 1661872038}
   - component: {fileID: 1661872037}
+  - component: {fileID: 1661872039}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -4831,11 +4818,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a1a3c7e250b474ba6110a63812c35b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapons:
-  - {fileID: 1882584911}
-  - {fileID: 1628242416}
-  - {fileID: 1487336218}
-  - {fileID: 1466500413}
 --- !u!114 &1661872038
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4849,6 +4831,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   maxSize: 12
   items: []
+--- !u!114 &1661872039
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1661872036}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3759f646adcc5f242867bfd186867e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contextMenu: {fileID: 314952313}
 --- !u!114 &1661872041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5336,11 +5330,6 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1858915124}
---- !u!1 &1882584911 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1721118286769716, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 1883768950}
 --- !u!1001 &1883768950
 Prefab:
   m_ObjectHideFlags: 0

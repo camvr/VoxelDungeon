@@ -17,6 +17,15 @@ MonoBehaviour:
   isDefaultItem: 0
   dropChance: 0.01
   slot: 3
-  defenseModifier: 3
-  damageModifier: 8
-  strengthModifier: 3
+  defenseModifierBase:
+    m_Min: 2
+    m_Max: 4
+  defenseLevelModifier: 1
+  damageModifierBase:
+    m_Min: 4
+    m_Max: 8
+  damageLevelModifier: 2
+  strengthModifierBase:
+    m_Min: 4
+    m_Max: 8
+  strengthLevelModifier: 2

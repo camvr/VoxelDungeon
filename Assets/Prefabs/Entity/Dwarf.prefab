@@ -1307,11 +1307,15 @@ MonoBehaviour:
   player: {fileID: 1272506764368752}
   viewRadius: 5
   healthRegenChance: 0.3
-  weapons:
+  healthRegenRange:
+    m_Min: 1
+    m_Max: 4
+  weaponRefs:
   - {fileID: 1721118286769716}
   - {fileID: 1743270670975890}
   - {fileID: 1899425164614410}
   - {fileID: 1016932572139652}
+  defenseRefs:
   - {fileID: 1653036816650836}
   - {fileID: 1813808974629890}
 --- !u!114 &114796955509640882

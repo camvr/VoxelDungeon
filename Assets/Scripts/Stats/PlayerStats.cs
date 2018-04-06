@@ -25,7 +25,7 @@ public class PlayerStats : EntityStats {
         {
             defense.RemoveModifier(oldItem.defenseModifier);
             damage.RemoveModifier(oldItem.damageModifier);
-            strength.RemoveModifier(newItem.strengthModifier);
+            strength.RemoveModifier(oldItem.strengthModifier);
         }
     }
 
@@ -46,9 +46,9 @@ public class PlayerStats : EntityStats {
         }
     }
 
-    public void RegenHealth(int min, int max)
+    public void RegenHealth(int amount)
     {
-        currentHealth = Mathf.Clamp(currentHealth + Random.Range(min, max + 1), 0, maxHealth);
+        currentHealth = Mathf.Clamp(currentHealth + amount, 0, maxHealth);
         UpdateUI();
     }
 

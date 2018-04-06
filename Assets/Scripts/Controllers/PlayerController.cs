@@ -9,8 +9,10 @@ public class PlayerController : MonoBehaviour
     public int viewRadius = 5;
 
     public float healthRegenChance = 0.3f;
+    public RandInt healthRegenRange;
 
-    public GameObject[] weapons;
+    public GameObject[] weaponRefs;
+    public GameObject[] defenseRefs;
 
     private PlayerMovement movement;
     private PlayerStats stats;
@@ -107,7 +109,7 @@ public class PlayerController : MonoBehaviour
             // Regen health randomly
             if (Random.Range(0f, 1f) <= healthRegenChance)
             {
-                stats.RegenHealth(1, 2);
+                stats.RegenHealth(healthRegenRange.Random);
             }
 
             GameManager.instance.playersTurn = false;

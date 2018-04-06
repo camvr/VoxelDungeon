@@ -947,6 +947,7 @@ GameObject:
   - component: {fileID: 389823616}
   - component: {fileID: 389823615}
   - component: {fileID: 389823614}
+  - component: {fileID: 389823618}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -965,11 +966,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 42a1a3c7e250b474ba6110a63812c35b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  weapons:
-  - {fileID: 935257936}
-  - {fileID: 935257935}
-  - {fileID: 935257934}
-  - {fileID: 935257933}
 --- !u!114 &389823615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1012,6 +1008,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &389823618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 389823613}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3759f646adcc5f242867bfd186867e2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  contextMenu: {fileID: 392898945}
 --- !u!1 &392898945
 GameObject:
   m_ObjectHideFlags: 0
@@ -2359,7 +2367,8 @@ MonoBehaviour:
   - {fileID: 194322, guid: 9ba882aed9dc21047bca2bbebafc7e79, type: 2}
   wallTiles:
   - {fileID: 1877926812349350, guid: 5671e847619527441a52016096ebb424, type: 2}
-  miscObjects: []
+  miscObjects:
+  - {fileID: 155830, guid: 8c228815df9a3394299f70ece2567e65, type: 2}
   wallTorch: {fileID: 1718696137769292, guid: 9c80053b237799b478e7fa9e33667a8b, type: 2}
   endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
   fillVoid: 1
@@ -3013,26 +3022,6 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 5afd846df3a268e439902c15ad351677, type: 2}
   m_IsPrefabParent: 0
---- !u!1 &935257933 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1016932572139652, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 935257932}
---- !u!1 &935257934 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1899425164614410, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 935257932}
---- !u!1 &935257935 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1743270670975890, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 935257932}
---- !u!1 &935257936 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 1721118286769716, guid: 5afd846df3a268e439902c15ad351677,
-    type: 2}
-  m_PrefabInternal: {fileID: 935257932}
 --- !u!1 &981257073
 GameObject:
   m_ObjectHideFlags: 0

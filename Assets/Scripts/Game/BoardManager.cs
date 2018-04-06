@@ -11,6 +11,7 @@ public enum TileType
     Empty,
     Item,
     Misc,
+    Trap
 }
 
 public class BoardManager : MonoBehaviour {
@@ -57,7 +58,7 @@ public class BoardManager : MonoBehaviour {
             availableTiles[i] = new bool[board[i].Length];
             for (int j = 0; j < board[i].Length; j++)
             {
-                availableTiles[i][j] = board[i][j] == TileType.Floor;
+                availableTiles[i][j] = (board[i][j] == TileType.Floor || board[i][j] == TileType.Trap);
             }
         }
 
@@ -104,7 +105,7 @@ public class BoardManager : MonoBehaviour {
         if (x < 0 || x >= board.Length || z < 0 || z >= board[0].Length) return false;
 
         TileType tile = board[x][z];
-        return (tile == TileType.Floor || tile == TileType.Item) && availableTiles[x][z];
+        return (tile == TileType.Floor || tile == TileType.Item || tile == TileType.Trap) && availableTiles[x][z];
     }
 
     public bool IsExitTile(int x, int z)
@@ -121,6 +122,14 @@ public class BoardManager : MonoBehaviour {
 
     public void DropItem(Item item, Vector3 position)
     {
+        GameObject itemInstance = Instantiate(item.prefab, position, Quaternion.Euler(90, 45, 90)) as GameObject;
+        itemInstance.transform.parent = itemObjects.transform;
+        GameManager.instance.AddItem(itemInstance.transform);
+    }
+
+    public void DropItem(Equipment item, Vector3 position)
+    {
+        item.Initialize();
         GameObject itemInstance = Instantiate(item.prefab, position, Quaternion.Euler(90, 45, 90)) as GameObject;
         itemInstance.transform.parent = itemObjects.transform;
         GameManager.instance.AddItem(itemInstance.transform);

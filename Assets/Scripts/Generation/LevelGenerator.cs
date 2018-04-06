@@ -12,6 +12,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] floorTiles;                         // An array of floor tile prefabs
     public GameObject[] wallTiles;                          // An array of wall tile prefabs
     public GameObject[] miscObjects;
+    public GameObject trapTile;
     public GameObject wallTorch;
     public GameObject endTile;
     public bool fillVoid = true;
@@ -23,7 +24,7 @@ public class LevelGenerator : MonoBehaviour
     private GameObject dungeonTiles;                        // GameObject that acts as a container for the tiles in this level
     private int playerRoomIndex = -1;
 
-    private TileType[] _legalFloorTiles = { TileType.Floor, TileType.Exit };
+    private TileType[] _legalFloorTiles = { TileType.Floor, TileType.Exit, TileType.Trap };
     private int level;
 
     private void Start()
@@ -84,7 +85,7 @@ public class LevelGenerator : MonoBehaviour
         pos.y = 0.5f;
         pos.z = rooms[rightmost].zPos + Random.Range(0, rooms[rightmost].roomHeight);*/
         Vector3 newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
-        while (newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || tiles[(int)newPos.x][(int)newPos.z] != TileType.Floor)
+        while (newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z) || tiles[(int)newPos.x][(int)newPos.z] == TileType.Trap)
             newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
 
         return newPos;
@@ -99,7 +100,7 @@ public class LevelGenerator : MonoBehaviour
             if (playerRoomIndex != i && Random.Range(0f, 1f) >= 0.1)
             {
                 Vector3 newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
-                while (positions.Contains(newPos) || newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length ||tiles[(int)newPos.x][(int)newPos.z] != TileType.Floor)
+                while (positions.Contains(newPos) || newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z))
                     newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
                 positions.Add(newPos);
             }
@@ -274,7 +275,7 @@ public class LevelGenerator : MonoBehaviour
         /* Random Dungeon features */
         for (int i = 0; i < rooms.Length; i++)
         {
-            if (Random.Range(0f, 1f) < 0.4)
+            if (Random.Range(0f, 1f) < 0.4f)
             {
                 Vector2 pos = rooms[i].GetNonBlockingPosition();
                 while (pos.x < columns && pos.y < rows && tiles[(int)pos.x][(int)pos.y] != TileType.Floor)
@@ -282,21 +283,12 @@ public class LevelGenerator : MonoBehaviour
                     pos = rooms[i].GetNonBlockingPosition();
                 }
 
-                tiles[(int)pos.x][(int)pos.y] = TileType.Misc;
+                if (Random.Range(0f, 1f) < 0.3f)
+                    tiles[(int)pos.x][(int)pos.y] = TileType.Trap;
+                else
+                    tiles[(int)pos.x][(int)pos.y] = TileType.Misc;
             }
         }
-
-        /* Old attempt for torches */
-        /*for (int i = 0; i < tiles.Length; i++)
-        {
-            for (int j = 0; j < tiles[i].Length; j++)
-            {
-                if (tiles[i][j] == TileType.Wall && NumSurroundingTiles(i, j, TileType.Floor) < 3) // TODO: change randomization to analytical tactic
-                {
-                    tiles[i][j] = TileType.WallTorch;
-                }
-            }
-        }*/
     }
 
     private void InstantiateTiles()
@@ -346,6 +338,9 @@ public class LevelGenerator : MonoBehaviour
                         break;
                     case TileType.Misc:
                         InstantiateTile(miscObjects, i, 0.5f, j, 0, Random.Range(0, 4) * 90f, 0);
+                        break;
+                    case TileType.Trap:
+                        InstantiateTile(trapTile, i, 0, j);
                         break;
                     case TileType.Empty:
                         if (fillVoid) InstantiateTile(voidTile, i, 1.5f, j);
