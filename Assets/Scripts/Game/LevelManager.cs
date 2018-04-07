@@ -10,6 +10,7 @@ public class LevelManager : MonoBehaviour
     private int level = 1;
     private bool isDefaultSetup = true;
     private int playerHealth = 100;
+    private bool isPlayerGod = false;
     private List<Item> playerInventory = new List<Item>();
     private Equipment[] playerEquiped = new Equipment[System.Enum.GetNames(typeof(EquipmentType)).Length];
 
@@ -43,6 +44,9 @@ public class LevelManager : MonoBehaviour
 
     public void NextLevel()
     {
+        if (SceneManager.GetActiveScene().name == "PortalLevel")
+            return;
+
         level++;
         SaveState();
         GameManager.instance.gameOver = false;
@@ -58,6 +62,7 @@ public class LevelManager : MonoBehaviour
         isDefaultSetup = true;
         level = 1;
         playerHealth = 100;
+        isPlayerGod = false;
         playerInventory = new List<Item>();
         playerEquiped = new Equipment[System.Enum.GetNames(typeof(EquipmentType)).Length];
     }
@@ -66,6 +71,7 @@ public class LevelManager : MonoBehaviour
     {
         // save basic player stats
         playerHealth = PlayerController.instance.gameObject.GetComponent<PlayerStats>().currentHealth;
+        isPlayerGod = PlayerController.instance.isGodMode;
 
         // Save inventory state
         playerInventory = Inventory.instance.items;
@@ -81,6 +87,7 @@ public class LevelManager : MonoBehaviour
         if (!isDefaultSetup)
         {
             PlayerController.instance.gameObject.GetComponent<PlayerStats>().currentHealth = playerHealth;
+            PlayerController.instance.isGodMode = isPlayerGod;
 
             List<Item> item_refs = new List<Item>();
             foreach (Item item in playerInventory)

@@ -28,6 +28,9 @@ public class GameManager : MonoBehaviour
     private GameObject levelCompleteUI;
     private GameObject floorNumberText;
 
+    private int godModeCounter = 0;
+    private float deltaGodCommand = 0;
+
     void Awake ()
     {
         if (instance == null)
@@ -120,8 +123,52 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     private void Update ()
     {
-        if (Input.GetKey(KeyCode.P)) // TODO: temp god mode command
-            LevelComplete();
+        // Activate god mode
+        if (Input.GetKeyDown(KeyCode.G))
+        {
+            float newTime = Time.realtimeSinceStartup;
+            if (newTime - deltaGodCommand < 0.5f)
+                godModeCounter++;
+            else
+                godModeCounter = 1;
+
+            if (godModeCounter >= 5)
+            {
+                if (PlayerController.instance.isGodMode)
+                {
+                    PlayerController.instance.isGodMode = false;
+                    MessageUI.instance.Log("God Mode disabled.", Color.green);
+                }
+                else
+                {
+                    PlayerController.instance.isGodMode = true;
+                    MessageUI.instance.Log("God Mode enabled.", Color.green);
+                }
+
+                godModeCounter = 0;
+            }
+
+            deltaGodCommand = newTime;
+        }
+
+        // god mode commands
+        if (PlayerController.instance.isGodMode)
+        {
+            if (Input.GetKeyDown(KeyCode.L)) // next level
+                LevelComplete();
+            else if (Input.GetKeyDown(KeyCode.K)) // kill all in radius
+            {
+                foreach (EnemyController enemy in enemies.ToArray())
+                {
+                    if ((enemy.transform.position - PlayerController.instance.transform.position).sqrMagnitude < 9)
+                    {
+                        enemy.GetComponent<EnemyStats>().Die();
+                    }
+                }
+            }
+
+            playersTurn = false;
+        }
 
         if (playersTurn || enemiesMoving || doingSetup || gameOver)
             return;

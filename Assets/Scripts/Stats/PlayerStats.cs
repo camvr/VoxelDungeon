@@ -31,7 +31,7 @@ public class PlayerStats : EntityStats {
 
     public override void Damage(int damage)
     {
-        if (currentHealth <= 0)
+        if (currentHealth <= 0 || PlayerController.instance.isGodMode)
             return;
         
         currentHealth -= Mathf.Clamp(damage - defense.GetValue(), 0, currentHealth);

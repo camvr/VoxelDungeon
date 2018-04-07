@@ -20,6 +20,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject endTile;
     public bool fillVoid = true;
     public GameObject voidTile;
+    public GameObject portal;
 
     private TileType[][] tiles;                             // An array of tiles representing the level
     private Room[] rooms;                                   // An array of rooms for this level that are generated
@@ -109,14 +110,28 @@ public class LevelGenerator : MonoBehaviour
     {
         List<Vector3> positions = new List<Vector3>();
 
-        for (int i = 0; i < rooms.Length; i++)
+        if (finalLevel)
         {
-            if (playerRoomIndex != i && Random.Range(0f, 1f) >= 0.1)
+            Vector3 newPos;
+            for (int i = 0; i < 4; i++)
             {
-                Vector3 newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
-                while (positions.Contains(newPos) || newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z))
-                    newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+                newPos = new Vector3(Random.Range(1, columns), 0.5f, Random.Range(1, rows));
+                while (!IsFloorTile((int)newPos.x, (int)newPos.z))
+                    newPos = new Vector3(Random.Range(1, columns), 0.5f, Random.Range(1, rows));
                 positions.Add(newPos);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < rooms.Length; i++)
+            {
+                if (playerRoomIndex != i && Random.Range(0f, 1f) >= 0.1)
+                {
+                    Vector3 newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+                    while (positions.Contains(newPos) || newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z))
+                        newPos = new Vector3(rooms[i].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[i].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+                    positions.Add(newPos);
+                }
             }
         }
 
@@ -385,6 +400,12 @@ public class LevelGenerator : MonoBehaviour
                         break;
                     case TileType.Empty:
                         if (fillVoid) InstantiateTile(voidTile, i, 1.5f, j);
+                        break;
+                    case TileType.Portal:
+                        if (NumSurroundingTiles(i, j, TileType.Portal) == 4)
+                        {
+                            InstantiateTile(portal, i, 0, j);
+                        }
                         break;
                 }
             }

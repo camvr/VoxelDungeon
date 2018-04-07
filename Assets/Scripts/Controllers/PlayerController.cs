@@ -14,6 +14,8 @@ public class PlayerController : MonoBehaviour
     public GameObject[] weaponRefs;
     public GameObject[] defenseRefs;
 
+    public bool isGodMode = false;
+
     private PlayerMovement movement;
     private PlayerStats stats;
 
@@ -107,7 +109,7 @@ public class PlayerController : MonoBehaviour
             }
 
             // Regen health randomly
-            if (Random.Range(0f, 1f) <= healthRegenChance)
+            if (!isGodMode && Random.Range(0f, 1f) <= healthRegenChance)
             {
                 stats.RegenHealth(healthRegenRange.Random);
             }

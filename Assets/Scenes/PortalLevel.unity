@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -3033,6 +3033,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   finalLevel: 1
+  portalRoomRadius: 10
   columns: 100
   rows: 100
   numRooms:
@@ -3059,6 +3060,7 @@ MonoBehaviour:
   endTile: {fileID: 1853148557007706, guid: 5596ec9c907c4f846892e8d7fb3ed071, type: 2}
   fillVoid: 1
   voidTile: {fileID: 1874576652213684, guid: ffe55f81c590c184db985e328056fa2e, type: 2}
+  portal: {fileID: 1907287926570912, guid: e09e1855fba5796489b5090e7048770c, type: 2}
 --- !u!114 &1258104914
 MonoBehaviour:
   m_ObjectHideFlags: 0
