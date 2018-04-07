@@ -11,7 +11,8 @@ public enum TileType
     Empty,
     Item,
     Misc,
-    Trap
+    Trap,
+    Portal
 }
 
 public class BoardManager : MonoBehaviour {

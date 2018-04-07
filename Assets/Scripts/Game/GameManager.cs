@@ -57,7 +57,9 @@ public class GameManager : MonoBehaviour
         levelCompleteUI = GameObject.Find("LevelCompletePanel");
         floorNumberText = GameObject.Find("FloorNumberText");
 
-        if (!isTutorial)
+        if (SceneManager.GetActiveScene().name == "PortalLevel")
+            floorNumberText.GetComponent<Text>().text = "Helvete";
+        else if (!isTutorial)
             floorNumberText.GetComponent<Text>().text = "Floor " + LevelManager.instance.GetLevel();
         gameOverUI.SetActive(false);
         levelCompleteUI.SetActive(false);

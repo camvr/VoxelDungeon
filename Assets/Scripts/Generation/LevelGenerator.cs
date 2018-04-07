@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class LevelGenerator : MonoBehaviour
 {
+    public bool finalLevel = false;
+    public int portalRoomRadius = 10;
+
     public int columns = 100;                               // The total number of columns in the level space
     public int rows = 100;                                  // The total number of rows in the level space
     public RandInt numRooms = new RandInt(15, 20);          // The range of how many rooms there can be
@@ -54,13 +57,17 @@ public class LevelGenerator : MonoBehaviour
 
         SetupTilesArray();
 
-        CreateRoomsAndCorridors();
+        if (finalLevel)
+        {
+            GeneratePortalRoom();
+        }
+        else
+        {
+            CreateRoomsAndCorridors();
+            PlaceDungeonFeatures();
+        }
 
-        SetTilesValuesForRooms();
-        SetTilesValuesForCorridors();
-        PlaceDungeonFeatures();
         SetWallPositions();
-
         InstantiateTiles();
 
         return tiles;
@@ -68,26 +75,33 @@ public class LevelGenerator : MonoBehaviour
 
     public Vector3 GetPlayerStartPos()
     {
-        int rightmost = 0;
-        int minNum = columns + rows;
-
-        // find furthest room from exit >:D
-        for (int i = 1; i < rooms.Length; i++)
+        Vector3 newPos;
+        if (finalLevel)
         {
-            if (rooms[i].xPos + rooms[i].zPos < minNum)
-            {
-                minNum = rooms[i].xPos + rooms[i].zPos;
-                rightmost = i;
-            }
+            newPos = new Vector3(Random.Range(1, columns), 0.5f, Random.Range(1, rows));
+            while (!IsFloorTile((int)newPos.x, (int)newPos.z))
+                newPos = new Vector3(Random.Range(1, columns), 0.5f, Random.Range(1, rows));
         }
-        playerRoomIndex = rightmost;
-        /*pos.x = rooms[rightmost].xPos + Random.Range(0, rooms[rightmost].roomWidth);
-        pos.y = 0.5f;
-        pos.z = rooms[rightmost].zPos + Random.Range(0, rooms[rightmost].roomHeight);*/
-        Vector3 newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
-        while (newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z) || tiles[(int)newPos.x][(int)newPos.z] == TileType.Trap)
-            newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+        else
+        {
+            int rightmost = 0;
+            int minNum = columns + rows;
 
+            // find furthest room from exit >:D
+            for (int i = 1; i < rooms.Length; i++)
+            {
+                if (rooms[i].xPos + rooms[i].zPos < minNum)
+                {
+                    minNum = rooms[i].xPos + rooms[i].zPos;
+                    rightmost = i;
+                }
+            }
+            playerRoomIndex = rightmost;
+
+            newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+            while (newPos.x < 0 || newPos.x >= tiles.Length || newPos.z < 0 || newPos.z >= tiles[0].Length || !IsFloorTile((int)newPos.x, (int)newPos.z) || tiles[(int)newPos.x][(int)newPos.z] == TileType.Trap)
+                newPos = new Vector3(rooms[rightmost].xPos + Random.Range(0, rooms[0].roomWidth) + 1, 0.5f, rooms[rightmost].zPos + Random.Range(0, rooms[0].roomHeight) + 1);
+        }
         return newPos;
     }
 
@@ -125,6 +139,30 @@ public class LevelGenerator : MonoBehaviour
         }
     }
 
+    private void GeneratePortalRoom()
+    {
+        Vector2 center = new Vector2(Mathf.Round(columns / 2), Mathf.Round(rows / 2));
+
+        for (int i = 0; i < tiles.Length; i++)
+        {
+            for (int j = 0; j < tiles[i].Length; j++)
+            {
+                if ((new Vector2(i, j) - center).sqrMagnitude < portalRoomRadius * portalRoomRadius)
+                {
+                    tiles[i][j] = TileType.Floor;
+                }
+            }
+        }
+
+        for (int i = (int)center.x - 1; i <= (int)center.x + 1; i++)
+        {
+            for (int j = (int)center.y - 1; j <= (int)center.y + 1; j++)
+            {
+                tiles[i][j] = TileType.Portal;
+            }
+        }
+    }
+
     private void CreateRoomsAndCorridors()
     {
         // Initialize the number of rooms and corresponding corridors
@@ -152,6 +190,9 @@ public class LevelGenerator : MonoBehaviour
                 corridors[i].setupCorridor(rooms[i], corridorLength, roomWidth, roomHeight, columns, rows, false);
             }
         }
+
+        SetTilesValuesForRooms();
+        SetTilesValuesForCorridors();
     }
 
     private void SetTilesValuesForRooms()

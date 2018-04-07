@@ -46,7 +46,11 @@ public class LevelManager : MonoBehaviour
         level++;
         SaveState();
         GameManager.instance.gameOver = false;
-        SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
+
+        if (level > totalLevels)
+            SceneManager.LoadScene("PortalLevel", LoadSceneMode.Single);
+        else
+            SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
 
     public void ResetState()

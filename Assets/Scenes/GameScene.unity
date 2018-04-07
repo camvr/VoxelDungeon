@@ -4464,6 +4464,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1035bb2f4796e8f49b969fbfaf8a541c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  portalRoom: 0
   columns: 100
   rows: 100
   numRooms:
@@ -5667,6 +5668,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5c2820d87381d4d49a4d799428454df2, type: 2}
   - {fileID: 11400000, guid: 2a6425fa25f0f4247a01ef6927082f23, type: 2}
   - {fileID: 11400000, guid: 546c0637dbcb3dd40b0041d412f223bc, type: 2}
+  - {fileID: 11400000, guid: d73fd0c5c2d904943b2fed85b52c3ef8, type: 2}
+  - {fileID: 11400000, guid: 7c4ae9e35e807604fa6183f9ebac4497, type: 2}
 --- !u!4 &2112790492
 Transform:
   m_ObjectHideFlags: 0
