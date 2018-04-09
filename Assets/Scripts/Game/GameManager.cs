@@ -20,9 +20,16 @@ public class GameManager : MonoBehaviour
     public delegate void OnTriggerWorldMoves();
     public OnTriggerWorldMoves onTriggerWorldMovesCallback;
 
-    private List<EnemyController> enemies;
+    public List<EnemyController> enemies { get; private set; }
     private bool enemiesMoving = false;
     private bool doingSetup = true;
+
+    // Variables dealing with final level
+    public bool isFinalLevel { get; private set; }
+    private int numBossesRemaining;
+    private Text bossesRemainingText;
+    private GameObject gameCompletePanel;
+    private GameObject portal;
 
     private GameObject gameOverUI;
     private GameObject levelCompleteUI;
@@ -37,6 +44,8 @@ public class GameManager : MonoBehaviour
             instance = this;
         else if (instance != this)
             Destroy(gameObject);
+
+        isFinalLevel = false;
 	}
 
     void OnEnable()
@@ -61,11 +70,21 @@ public class GameManager : MonoBehaviour
         floorNumberText = GameObject.Find("FloorNumberText");
 
         if (SceneManager.GetActiveScene().name == "PortalLevel")
-            floorNumberText.GetComponent<Text>().text = "Helvete";
+        {
+            //floorNumberText.GetComponent<Text>().text = "Helvete";
+            isFinalLevel = true;
+            numBossesRemaining = LevelManager.instance.numberFinalBosses;
+            bossesRemainingText = GameObject.Find("BossesRemainingText").GetComponent<Text>();
+            bossesRemainingText.text = numBossesRemaining + " Portal Weavers left";
+
+            gameCompletePanel = GameObject.Find("GameCompletePanel");
+            gameCompletePanel.SetActive(false);
+        }
         else if (!isTutorial)
             floorNumberText.GetComponent<Text>().text = "Floor " + LevelManager.instance.GetLevel();
+
         gameOverUI.SetActive(false);
-        levelCompleteUI.SetActive(false);
+        if (!isFinalLevel) levelCompleteUI.SetActive(false);
 
         enemiesMoving = false;
         playersTurn = false;
@@ -82,6 +101,9 @@ public class GameManager : MonoBehaviour
         // Load state from previous level if applicable
         if (!isTutorial)
             LevelManager.instance.LoadState();
+
+        if (isFinalLevel)
+            portal = GameObject.FindGameObjectWithTag("Portal");
 
         doingSetup = false;
         playersTurn = true;
@@ -113,7 +135,7 @@ public class GameManager : MonoBehaviour
 
     public void LevelComplete()
     {
-        if (!gameOver)
+        if (!gameOver && !isFinalLevel)
         {
             gameOver = true;
             levelCompleteUI.SetActive(true);
@@ -151,29 +173,16 @@ public class GameManager : MonoBehaviour
             deltaGodCommand = newTime;
         }
 
-        // god mode commands
-        if (PlayerController.instance.isGodMode)
-        {
-            if (Input.GetKeyDown(KeyCode.L)) // next level
-                LevelComplete();
-            else if (Input.GetKeyDown(KeyCode.K)) // kill all in radius
-            {
-                foreach (EnemyController enemy in enemies.ToArray())
-                {
-                    if ((enemy.transform.position - PlayerController.instance.transform.position).sqrMagnitude < 9)
-                    {
-                        enemy.GetComponent<EnemyStats>().Die();
-                    }
-                }
-            }
-
-            playersTurn = false;
-        }
-
         if (playersTurn || enemiesMoving || doingSetup || gameOver)
             return;
 
         StartCoroutine(EnemyTurn());
+
+        if (isFinalLevel && numBossesRemaining == 0)
+        {
+            gameOver = true;
+            StartCoroutine(InvokeEndGameScene());
+        }
     }
 
     private IEnumerator EnemyTurn()
@@ -185,6 +194,11 @@ public class GameManager : MonoBehaviour
         {
             if (enemy.isDead)
             {
+                if (enemy.isBoss)
+                {
+                    bossesRemainingText.text = --numBossesRemaining + " Portal Weavers left";
+                }
+
                 enemy.gameObject.SetActive(false);
                 enemies.Remove(enemy);
                 BoardManager.instance.SetAvailableTile((int)enemy.transform.position.x, (int)enemy.transform.position.z, true);
@@ -208,5 +222,57 @@ public class GameManager : MonoBehaviour
 
         playersTurn = true;
         enemiesMoving = false;
+    }
+
+    private IEnumerator InvokeEndGameScene()
+    {
+        yield return new WaitForSeconds(1f);
+
+        // Move to portal
+        Vector3 start = Camera.main.transform.position;
+        Vector3 dest = portal.transform.position + new Vector3(-4, 4, -4);
+        Quaternion startRotation = Camera.main.transform.rotation;
+        Quaternion destRotation = Quaternion.LookRotation((portal.transform.position + new Vector3(1, 0, 1)) - dest);
+        
+        float t = 0f;
+
+        while (t < 1.0f)
+        {
+            t += Time.deltaTime / 3f;
+            Camera.main.transform.position = Vector3.Lerp(start, dest, t);
+            Camera.main.transform.rotation = Quaternion.Slerp(startRotation, destRotation, t);
+            yield return null;
+        }
+
+        Camera.main.transform.position = dest;
+        Camera.main.transform.rotation = destRotation;
+
+        // Start animation and trigger explosion animation
+        portal.GetComponent<Animator>().SetTrigger("portalExplosion");
+
+        float shakeDuration = 4f;
+        float magnitude = 0.001f;
+        t = 0.0f;
+        Vector3 originalCamPos = Camera.main.transform.localPosition;
+        Debug.Log(originalCamPos);
+
+        while (t < shakeDuration)
+        {
+            float x = Random.Range(-1f, 1f) * magnitude;
+            float y = Random.Range(-1f, 1f) * magnitude;
+
+            Camera.main.transform.localPosition = originalCamPos + new Vector3(x, y, 0);
+
+            t += Time.deltaTime;
+            magnitude += 0.001f;
+
+            yield return null;
+        }
+
+        Camera.main.transform.localPosition = originalCamPos;
+
+        yield return new WaitForSeconds(4f);
+
+        gameCompletePanel.SetActive(true);
     }
 }

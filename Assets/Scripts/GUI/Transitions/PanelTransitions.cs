@@ -25,4 +25,9 @@ public class PanelTransitions : MonoBehaviour
         else
             SceneManager.LoadScene("GameScene", LoadSceneMode.Single);
     }
+
+    public void ReturnToMainMenu()
+    {
+        SceneManager.LoadScene("MainMenu", LoadSceneMode.Single);
+    }
 }

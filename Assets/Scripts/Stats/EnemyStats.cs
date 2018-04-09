@@ -5,8 +5,8 @@ public class EnemyStats : EntityStats {
 
     public float dropChance = 0.6f;
 
-    private List<Item> drops;
-    private List<Equipment> mustDrop;
+    private List<Item> drops = new List<Item>();
+    private List<Equipment> mustDrop = new List<Equipment>();
 
     public void SetDrops(List<Item> _drops, List<Equipment> _mustDrop)
     {

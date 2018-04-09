@@ -8,6 +8,7 @@ public class EnemyController : Interactable {
 
     public int viewRadius = 7;
     public bool isDead = false;
+    public bool isBoss = false;
     public List<GameObject> equipRefs;
     public List<Equipment> equipmentDrops;
     public List<Item> drops;

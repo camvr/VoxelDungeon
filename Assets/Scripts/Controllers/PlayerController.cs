@@ -81,6 +81,27 @@ public class PlayerController : MonoBehaviour
             }
         }
 
+        // god mode commands
+        if (PlayerController.instance.isGodMode)
+        {
+            if (Input.GetKeyDown(KeyCode.L))
+            { // next level
+                GameManager.instance.LevelComplete();
+                GameManager.instance.playersTurn = false;
+            }
+            else if (Input.GetKeyDown(KeyCode.K)) // kill all in radius
+            {
+                foreach (EnemyController enemy in GameManager.instance.enemies.ToArray())
+                {
+                    if ((enemy.transform.position - PlayerController.instance.transform.position).sqrMagnitude < 9)
+                    {
+                        enemy.GetComponent<EnemyStats>().Die();
+                    }
+                }
+                GameManager.instance.playersTurn = false;
+            }
+        }
+
         // Check for legal move, give relevant actions
         if (move != new Vector2(0, 0))
         {

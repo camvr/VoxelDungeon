@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 public class LevelManager : MonoBehaviour
 {
     public int totalLevels = 5;
+    public int numberFinalBosses = 3;
+
     public List<Item> allItemRefs;
 
     private int level = 1;

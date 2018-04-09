@@ -19,6 +19,8 @@ public class CameraController : MonoBehaviour {
         zoomOffset = new Vector3(0, 0, 0);
         target = PlayerController.instance.transform;
         hiddenWalls = new List<Transform>();
+
+        
     }
 
     void Update()
@@ -32,41 +34,41 @@ public class CameraController : MonoBehaviour {
                 zoomOffset = new Vector3(-maxZoom, maxZoom * 1.5f, -maxZoom);
             else if (zoomOffset.y < 0)
                 zoomOffset = new Vector3(0, 0, 0);
-        }
 
-        transform.position = target.position + offset + zoomOffset;
-        transform.LookAt(target);
-
-        // Raycast to player
-        // change alpha of any walls in the way
-        RaycastHit[] hits = Physics.RaycastAll(transform.position, target.position - transform.position, (target.position - transform.position).magnitude, fadeMask);
-        for (int i = 0; i < hits.Length; i++)
-        {
-            if (!hiddenWalls.Contains(hits[i].transform))
+            transform.position = target.position + offset + zoomOffset;
+            transform.LookAt(target);
+            
+            // Raycast to player
+            // change alpha of any walls in the way
+            RaycastHit[] hits = Physics.RaycastAll(transform.position, target.position - transform.position, (target.position - transform.position).magnitude, fadeMask);
+            for (int i = 0; i < hits.Length; i++)
             {
-                hiddenWalls.Add(hits[i].transform);
-                StartCoroutine(FadeWall(hits[i].transform, wallFadeMin, wallFadeTime));
-            }
-        }
-
-        for (int i = 0; i < hiddenWalls.Count; i++)
-        {
-            bool isHit = false;
-            for (int j = 0; j < hits.Length; j++)
-            {
-                if (hits[j].transform == hiddenWalls[i])
+                if (!hiddenWalls.Contains(hits[i].transform))
                 {
-                    isHit = true;
-                    break;
+                    hiddenWalls.Add(hits[i].transform);
+                    StartCoroutine(FadeWall(hits[i].transform, wallFadeMin, wallFadeTime));
                 }
             }
-            
-            if (!isHit)
+
+            for (int i = 0; i < hiddenWalls.Count; i++)
             {
-                Transform currWall = hiddenWalls[i];
-                StartCoroutine(FadeWall(currWall, 1f, wallFadeTime));
-                hiddenWalls.RemoveAt(i);
-                i--;
+                bool isHit = false;
+                for (int j = 0; j < hits.Length; j++)
+                {
+                    if (hits[j].transform == hiddenWalls[i])
+                    {
+                        isHit = true;
+                        break;
+                    }
+                }
+            
+                if (!isHit)
+                {
+                    Transform currWall = hiddenWalls[i];
+                    StartCoroutine(FadeWall(currWall, 1f, wallFadeTime));
+                    hiddenWalls.RemoveAt(i);
+                    i--;
+                }
             }
         }
     }

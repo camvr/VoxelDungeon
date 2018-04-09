@@ -18,8 +18,7 @@ public enum TileType
 public class BoardManager : MonoBehaviour {
 
     public GameObject enemyPrefab;
-    public int minEnemies = 8;
-    public int maxEnemies = 15;
+    public GameObject bossPrefab;
 
     private GameObject enemyObjects;
     private GameObject itemObjects;
@@ -71,8 +70,29 @@ public class BoardManager : MonoBehaviour {
         SetAvailableTile((int)startPos.x, (int)startPos.z, false);
 
         // Place enemies
-        //int numEnemies = Random.Range(minEnemies, maxEnemies);
-        if (!GameManager.instance.isTutorial)
+        if (GameManager.instance.isFinalLevel)
+        {
+            for (int i = 0; i < LevelManager.instance.numberFinalBosses; i++)
+            {
+                Vector3 bossPos = GetLegalPosition();
+                SetAvailableTile((int)bossPos.x, (int)bossPos.z, false);
+                GameObject bossInstance = Instantiate(bossPrefab, bossPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
+                bossInstance.transform.parent = enemyObjects.transform;
+            }
+
+            int numEnemies = Random.Range(2, 4);
+            for (int i = 0; i < numEnemies; i++)
+            {
+                Vector3 enemyPos = GetLegalPosition();
+                SetAvailableTile((int)enemyPos.x, (int)enemyPos.z, false);
+                GameObject enemyInstance = Instantiate(enemyPrefab, enemyPos, Quaternion.Euler(0, Random.Range(0, 4) * 90, 0)) as GameObject;
+                enemyInstance.transform.parent = enemyObjects.transform;
+
+                // Set enemy instance's stats
+                enemyInstance.GetComponent<EnemyController>().RandomizeStats(LevelManager.instance.GetLevel());
+            }
+        }
+        else if (!GameManager.instance.isTutorial)
         {
             List<Vector3> enemyPositions = levelGenerator.GetEnemyDistributedPositions();
             foreach (Vector3 enemyPos in enemyPositions)

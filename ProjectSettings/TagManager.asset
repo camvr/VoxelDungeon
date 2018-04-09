@@ -9,6 +9,7 @@ TagManager:
   - Item
   - RH_Melee
   - LH_Block
+  - Portal
   layers:
   - Default
   - TransparentFX
