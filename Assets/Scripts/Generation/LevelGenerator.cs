@@ -399,7 +399,8 @@ public class LevelGenerator : MonoBehaviour
                         InstantiateTile(trapTile, i, 0, j);
                         break;
                     case TileType.Empty:
-                        if (fillVoid) InstantiateTile(voidTile, i, 1.5f, j);
+                        if (fillVoid && (NumSurroundingTiles(i, j, TileType.Wall) > 0 || NumSurroundingTiles(i, j, TileType.WallTorch) > 0))
+                            InstantiateTile(voidTile, i, 1.5f, j);
                         break;
                     case TileType.Portal:
                         if (NumSurroundingTiles(i, j, TileType.Portal) == 4)

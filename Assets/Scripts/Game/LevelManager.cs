@@ -28,16 +28,29 @@ public class LevelManager : MonoBehaviour
             Destroy(gameObject);
             return;
         }
+        
+        DontDestroyOnLoad(gameObject);
+    }
+    #endregion
 
-        if (SceneManager.GetActiveScene().name == "GameScene")
-            DontDestroyOnLoad(gameObject);
-        else
+    void OnEnable()
+    {
+        SceneManager.sceneLoaded += OnLevelFinishedLoading;
+    }
+
+    void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
+    }
+
+    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "MainMenu" || SceneManager.GetActiveScene().name == "Tutorial")
         {
             instance = null;
             Destroy(gameObject);
         }
     }
-    #endregion
 
     public int GetLevel()
     {

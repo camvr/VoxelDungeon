@@ -48,17 +48,7 @@ public class GameManager : MonoBehaviour
         isFinalLevel = false;
 	}
 
-    void OnEnable()
-    {
-        SceneManager.sceneLoaded += OnLevelFinishedLoading;
-    }
-
-    void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnLevelFinishedLoading;
-    }
-
-    void OnLevelFinishedLoading(Scene scene, LoadSceneMode mode)
+    private void Start()
     {
         SetupLevel();
     }
@@ -228,6 +218,10 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
 
+        // Hide player UI
+        GameObject.Find("PlayerStatistics").SetActive(false);
+        GameObject.Find("MessageBoard").SetActive(false);
+
         // Move to portal
         Vector3 start = Camera.main.transform.position;
         Vector3 dest = portal.transform.position + new Vector3(-4, 4, -4);
@@ -254,7 +248,6 @@ public class GameManager : MonoBehaviour
         float magnitude = 0.001f;
         t = 0.0f;
         Vector3 originalCamPos = Camera.main.transform.localPosition;
-        Debug.Log(originalCamPos);
 
         while (t < shakeDuration)
         {

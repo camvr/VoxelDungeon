@@ -36,12 +36,11 @@ public class TutorialManager : MonoBehaviour {
     [HideInInspector] public TutorialState state { get; private set; }
     private Color currentColor = new Color(0.184f, 0.184f, 0.184f);
     private Color completedColor = new Color(0f, 0.69f, 0.035f);
-    private GameObject exitLadder;
+    private Vector3 exitLadder;
     
 	private void Start()
     {
         state = TutorialState.MOVEMENT;
-        exitLadder = GameObject.Find("ladder(Clone)");
 	}
 
     private void NextChallenge()
@@ -79,8 +78,9 @@ public class TutorialManager : MonoBehaviour {
                     objectiveLight.transform.localPosition = new Vector3(0, 3, 0);
                     break;
                 case TutorialState.EXIT:
+                    exitLadder = BoardManager.instance.GetExitTile();
                     objectiveLight.transform.parent = null;
-                    objectiveLight.transform.localPosition = new Vector3(exitLadder.transform.position.x, 3, exitLadder.transform.position.z);
+                    objectiveLight.transform.localPosition = new Vector3(exitLadder.x, 3, exitLadder.z);
                     break;
             }
         }

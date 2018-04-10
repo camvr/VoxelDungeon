@@ -1194,13 +1194,13 @@ MonoBehaviour:
   currentHealth: 0
   damage:
     minValue: 0
-    maxValue: 5
+    maxValue: 3
   strength:
     minValue: 0
-    maxValue: 0
+    maxValue: 2
   defense:
     minValue: 0
-    maxValue: 0
+    maxValue: 1
   dropChance: 0.6
 --- !u!114 &114634503772165258
 MonoBehaviour:
@@ -1255,6 +1255,7 @@ MonoBehaviour:
   interactionTransform: {fileID: 4290774572775736}
   viewRadius: 5
   isDead: 0
+  isBoss: 0
   equipRefs:
   - {fileID: 1446674162477504}
   - {fileID: 1323784256972862}

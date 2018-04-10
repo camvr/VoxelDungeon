@@ -686,14 +686,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   entityName: Portal Weaver
-  maxHealth: 70
+  maxHealth: 50
   currentHealth: 0
   damage:
-    minValue: 10
-    maxValue: 25
+    minValue: 5
+    maxValue: 10
   strength:
     minValue: 5
-    maxValue: 30
+    maxValue: 20
   defense:
     minValue: 0
     maxValue: 10

@@ -135,6 +135,19 @@ public class BoardManager : MonoBehaviour {
         return board[x][z] == TileType.Exit;
     }
 
+    public Vector3 GetExitTile()
+    {
+        for (int i = 0; i < board.Length; i++)
+        {
+            for (int j = 0; j < board[i].Length; j++)
+            {
+                if (board[i][j] == TileType.Exit)
+                    return new Vector3(i, 0, j);
+            }
+        }
+        return new Vector3(0, 0, 0);
+    }
+
     public void SetAvailableTile(int x, int z, bool available)
     {
         if (x >= 0 || x < availableTiles.Length || z >= 0 || z < availableTiles[0].Length)

@@ -1243,13 +1243,13 @@ MonoBehaviour:
   currentHealth: 0
   damage:
     minValue: 0
-    maxValue: 5
+    maxValue: 3
   strength:
     minValue: 0
-    maxValue: 0
+    maxValue: 5
   defense:
     minValue: 0
-    maxValue: 0
+    maxValue: 3
   healthText: {fileID: 0}
   healthBar: {fileID: 0}
 --- !u!114 &114537953496720966
@@ -1318,6 +1318,7 @@ MonoBehaviour:
   defenseRefs:
   - {fileID: 1653036816650836}
   - {fileID: 1813808974629890}
+  isGodMode: 0
 --- !u!114 &114796955509640882
 MonoBehaviour:
   m_ObjectHideFlags: 1
